@@ -1,0 +1,27 @@
+{
+  "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint/main/schema/markdownlint-config-schema.json",
+  "_comment": "E-Lang markdownlint configuration. Rules are relaxed to focus on clarity over strict formatting.",
+  "default": true,
+  "MD001": false,
+  "MD003": {
+    "style": "atx"
+  },
+  "MD004": {
+    "style": "dash"
+  },
+  "MD007": {
+    "indent": 2
+  },
+  "MD013": {
+    "line_length": 120,
+    "code_blocks": false,
+    "tables": false
+  },
+  "MD024": {
+    "siblings_only": true
+  },
+  "MD025": false,
+  "MD033": false,
+  "MD034": false,
+  "MD041": false
+}

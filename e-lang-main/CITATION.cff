@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+title: "E-Lang: A Formal Symbolic Language for Pre-Linguistic Emotional Representation"
+message: "If you use this work, please cite it as below."
+type: software
+version: "0.1.0"
+date-released: 2026-01-26
+url: "https://github.com/freqkflag/e-lang"
+license: MIT
+
+authors:
+  - name: Joey King
+    alias: freqkflag
+
+preferred-citation:
+  type: software
+  title: "E-Lang: A Formal Symbolic Language for Pre-Linguistic Emotional Representation"
+  authors:
+    - name: Joey King
+  version: "0.1.0"
+  year: 2026
+  url: "https://github.com/freqkflag/e-lang"

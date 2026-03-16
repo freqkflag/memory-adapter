@@ -1,5 +1,5 @@
 import http from "http";
-import { createDefaultMCPContext } from "./tools";
+import { createDefaultMCPContext, get_user_summary } from "./tools";
 
 export function startServer(port: number = 7070): void {
   const ctx = createDefaultMCPContext();
@@ -16,7 +16,7 @@ export function startServer(port: number = 7070): void {
       return;
     }
     if (req.url.startsWith("/summary")) {
-      const summary = await (await import("./tools")).get_user_summary(ctx);
+      const summary = await get_user_summary(ctx);
       res.statusCode = 200;
       res.setHeader("Content-Type", "text/plain; charset=utf-8");
       res.end(summary);

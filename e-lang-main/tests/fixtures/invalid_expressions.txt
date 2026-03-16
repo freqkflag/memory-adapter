@@ -1,0 +1,6 @@
+E{0,0,0,0,0,0,0,0} →                  # incomplete trajectory
+⊕ E{0,0,0,0,0,0,0,0}                   # leading operator
+E{0,0,0,0,0,0,0,0} ⊗ ctx()             # empty tag
+E{0,0,0,0,0,0,0,0} ⊗ ctx(work space)   # invalid tag (space)
+mask(E{0,0,0,0,0,0,0,0} 0.7)           # missing comma
+mask(E{0,0,0,0,0,0,0,0}, 1.7)           # out of range (semantic)
