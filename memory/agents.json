@@ -1,0 +1,26 @@
+[
+  {
+    "id": "agent-1773656682677-evay5k",
+    "name": "Test ChatGPT",
+    "type": "chatgpt",
+    "lastSeen": 1773656682677
+  },
+  {
+    "id": "agent-1773656682677-qp6b6e",
+    "name": "Test Claude",
+    "type": "claude",
+    "lastSeen": 1773656682677
+  },
+  {
+    "id": "agent-1773657401926-ftyg0n",
+    "name": "Test ChatGPT",
+    "type": "chatgpt",
+    "lastSeen": 1773657401926
+  },
+  {
+    "id": "agent-1773657401926-0byjlh",
+    "name": "Test Claude",
+    "type": "claude",
+    "lastSeen": 1773657401926
+  }
+]
