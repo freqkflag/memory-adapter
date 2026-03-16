@@ -1,0 +1,31 @@
+{
+  "name": "personal-ai-os",
+  "version": "0.1.0",
+  "description": "Personal AI Operating System with persistent markdown memory, hybrid retrieval, reflection, prediction, and E-Lang emotional vectors.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "ts-node src/mcp/server.ts",
+    "validate": "ts-node src/scripts/validate.ts",
+    "test": "ts-node src/scripts/test.ts"
+  },
+  "keywords": [
+    "personal-ai",
+    "memory",
+    "reflection",
+    "prediction",
+    "elang",
+    "mcp"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.0",
+    "@types/node": "^22.10.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
