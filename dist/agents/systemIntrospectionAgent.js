@@ -1,4 +1,4 @@
-import { normalizeText } from "../utils/text";
+import { normalizeText } from "../utils/text.js";
 export class SystemIntrospectionAgent {
     coordinator;
     id = "system-introspection";

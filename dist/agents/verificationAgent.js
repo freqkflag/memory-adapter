@@ -1,4 +1,4 @@
-import { verifyInsight } from "../reflection/verifyInsight";
+import { verifyInsight } from "../reflection/verifyInsight.js";
 export class VerificationAgent {
     coordinator;
     id = "verification";

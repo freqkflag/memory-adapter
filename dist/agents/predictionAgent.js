@@ -1,4 +1,4 @@
-import { generatePredictions } from "../prediction/predictionEngine";
+import { generatePredictions } from "../prediction/predictionEngine.js";
 export class PredictionAgent {
     coordinator;
     id = "prediction";

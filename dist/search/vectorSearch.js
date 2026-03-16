@@ -1,4 +1,4 @@
-import { normalizeText, tokenize } from "../utils/text";
+import { normalizeText, tokenize } from "../utils/text.js";
 function embed(text) {
     const tokens = tokenize(text);
     const vec = [];

@@ -1,4 +1,4 @@
-import { decomposeGoal } from "../planning/taskPlanner";
+import { decomposeGoal } from "../planning/taskPlanner.js";
 export class PlannerAgent {
     coordinator;
     id = "planner";

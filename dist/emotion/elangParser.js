@@ -1,5 +1,5 @@
-import { loadAxisRegistry } from "./axisRegistry";
-import { now } from "../utils/time";
+import { loadAxisRegistry } from "./axisRegistry.js";
+import { now } from "../utils/time.js";
 // ABNF-style grammar (documentation):
 // elang       = vector [";" trajectory]
 // vector      = 1*(axis)

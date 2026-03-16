@@ -1,7 +1,7 @@
-import { minePredictivePatterns } from "./patternMining";
-import { scorePrediction } from "./predictionScoring";
-import { generateId } from "../utils/ids";
-import { hoursFromNow } from "../utils/time";
+import { minePredictivePatterns } from "./patternMining.js";
+import { scorePrediction } from "./predictionScoring.js";
+import { generateId } from "../utils/ids.js";
+import { hoursFromNow } from "../utils/time.js";
 export function generatePredictions(memories) {
     const patterns = minePredictivePatterns(memories);
     const predictions = [];

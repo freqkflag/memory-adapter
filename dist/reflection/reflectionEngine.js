@@ -1,6 +1,6 @@
-import { detectSimplePatterns } from "./patternDetection";
-import { verifyInsight } from "./verifyInsight";
-import { generateCounterfactual } from "./counterfactualEngine";
+import { detectSimplePatterns } from "./patternDetection.js";
+import { verifyInsight } from "./verifyInsight.js";
+import { generateCounterfactual } from "./counterfactualEngine.js";
 export function generateReflections(episodes) {
     const nonReflectionEpisodes = episodes.filter((e) => e.domain !== "reflection");
     const patterns = detectSimplePatterns(nonReflectionEpisodes);

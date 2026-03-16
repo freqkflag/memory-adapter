@@ -1,4 +1,4 @@
-import { generateId } from "../utils/ids";
+import { generateId } from "../utils/ids.js";
 export function createRootTask(goal) {
     return {
         id: generateId("task"),

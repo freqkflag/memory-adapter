@@ -1,9 +1,9 @@
-import { PlannerAgent } from "../agents/plannerAgent";
-import { RetrieverAgent } from "../agents/retrieverAgent";
-import { ReflectionAgent } from "../agents/reflectionAgent";
-import { PredictionAgent } from "../agents/predictionAgent";
-import { VerificationAgent } from "../agents/verificationAgent";
-import { SystemIntrospectionAgent } from "../agents/systemIntrospectionAgent";
+import { PlannerAgent } from "../agents/plannerAgent.js";
+import { RetrieverAgent } from "../agents/retrieverAgent.js";
+import { ReflectionAgent } from "../agents/reflectionAgent.js";
+import { PredictionAgent } from "../agents/predictionAgent.js";
+import { VerificationAgent } from "../agents/verificationAgent.js";
+import { SystemIntrospectionAgent } from "../agents/systemIntrospectionAgent.js";
 export function createTools(coordinator) {
     const planner = new PlannerAgent(coordinator);
     const retriever = new RetrieverAgent(coordinator);

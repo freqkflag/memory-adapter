@@ -1,4 +1,4 @@
-import { generateReflections } from "../reflection/reflectionEngine";
+import { generateReflections } from "../reflection/reflectionEngine.js";
 export class ReflectionAgent {
     coordinator;
     id = "reflection";

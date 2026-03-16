@@ -1,4 +1,4 @@
-import { now } from "../utils/time";
+import { now } from "../utils/time.js";
 export function rankAndFilter(vectorResults, keywordResults, graphRelevance, profile, limit) {
     const keywordMap = new Map();
     for (const kr of keywordResults) {

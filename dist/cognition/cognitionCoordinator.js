@@ -1,5 +1,5 @@
-import { MemoryGraph } from "../graph/memoryGraph";
-import { hybridRetrieve } from "../search/hybridSearch";
+import { MemoryGraph } from "../graph/memoryGraph.js";
+import { hybridRetrieve } from "../search/hybridSearch.js";
 export class CognitionCoordinator {
     memory;
     agents;

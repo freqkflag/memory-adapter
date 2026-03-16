@@ -1,4 +1,4 @@
-import { keywordOverlap, tokenize } from "../utils/text";
+import { keywordOverlap, tokenize } from "../utils/text.js";
 export function keywordSearch(query, items, topK) {
     const qTokens = tokenize(query);
     const results = [];

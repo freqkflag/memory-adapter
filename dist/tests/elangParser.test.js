@@ -1,5 +1,5 @@
 import assert from "assert";
-import { parseELang } from "../emotion/elangParser";
+import { parseELang } from "../emotion/elangParser.js";
 export function runElangParserTests() {
     const v = parseELang("valence:0.5, arousal:0.2 -> valence:0.6, arousal:0.3");
     assert.strictEqual(v.source, "user");

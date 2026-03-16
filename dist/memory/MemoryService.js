@@ -1,9 +1,9 @@
 import { promises as fs } from "fs";
-import { DOMAIN_FILE_MAP } from "./domains";
-import { parseMemoryMarkdown } from "../markdown/parseMemory";
-import { appendMemoryItemsToMarkdown } from "../markdown/writeMemory";
-import { generateId } from "../utils/ids";
-import { now } from "../utils/time";
+import { DOMAIN_FILE_MAP } from "./domains.js";
+import { parseMemoryMarkdown } from "../markdown/parseMemory.js";
+import { appendMemoryItemsToMarkdown } from "../markdown/writeMemory.js";
+import { generateId } from "../utils/ids.js";
+import { now } from "../utils/time.js";
 export class MemoryService {
     memoryIndex = new Map();
     async loadAll(createdBy) {

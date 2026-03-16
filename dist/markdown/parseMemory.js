@@ -1,6 +1,6 @@
-import { parseSections } from "./sectionParser";
-import { generateId } from "../utils/ids";
-import { now } from "../utils/time";
+import { parseSections } from "./sectionParser.js";
+import { generateId } from "../utils/ids.js";
+import { now } from "../utils/time.js";
 export function parseMemoryMarkdown(markdown, domain, createdBy) {
     const sections = parseSections(markdown);
     const items = [];

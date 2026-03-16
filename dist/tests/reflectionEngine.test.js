@@ -1,5 +1,5 @@
 import assert from "assert";
-import { generateReflections } from "../reflection/reflectionEngine";
+import { generateReflections } from "../reflection/reflectionEngine.js";
 export function runReflectionEngineTests() {
     const base = {
         text: "",
