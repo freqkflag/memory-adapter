@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400">
+  <rect width="100%" height="100%" fill="white"/>
+  <text x="300" y="40" text-anchor="middle" font-size="20">E-Lang Axis Space</text>
+
+  <g font-size="12">
+    <text x="50" y="100">Valence (V)</text>
+    <text x="50" y="130">Arousal (A)</text>
+    <text x="50" y="160">Agency (C)</text>
+    <text x="50" y="190">Safety (S)</text>
+    <text x="50" y="220">Certainty (K)</text>
+    <text x="50" y="250">Dominance (D)</text>
+    <text x="50" y="280">Attachment (B)</text>
+    <text x="50" y="310">Novelty (N)</text>
+  </g>
+
+  <line x1="250" y1="80" x2="250" y2="330" stroke="black"/>
+  <text x="235" y="70">-1</text>
+  <text x="255" y="70">+1</text>
+</svg>

@@ -1,0 +1,2 @@
+# Test framework for E-Lang parser validation
+pytest>=7,<9

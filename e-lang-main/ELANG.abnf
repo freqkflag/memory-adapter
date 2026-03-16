@@ -1,0 +1,52 @@
+; E-Lang v0 ABNF
+; RFC 5234 style ABNF. Unicode operators are included as literals.
+; Implementations without Unicode support may add ASCII aliases separately.
+
+; ---------- Core ----------
+expression      = trajectory
+
+trajectory      = blend *( wsp? "→" wsp? blend )
+
+blend           = conflict *( wsp? "⊕" wsp? conflict )
+
+conflict        = modulated *( wsp? "⟂" wsp? modulated )
+
+modulated       = masked *( wsp? "⊗" wsp? ctx )
+
+masked          = maskcall / primary
+
+maskcall        = "mask" wsp? "(" wsp? expression wsp? "," wsp? maskvalue wsp? ")"
+
+primary         = state / "(" wsp? expression wsp? ")" / macro
+
+; ---------- State ----------
+state           = "E" wsp? "{" wsp? vlist wsp? "}"
+
+; Canonical ordered axis list: V,A,C,S,K,D,B,N
+vlist           = axisval wsp? "," wsp? axisval wsp? "," wsp? axisval wsp? "," wsp?
+                  axisval wsp? "," wsp? axisval wsp? "," wsp? axisval wsp? "," wsp?
+                  axisval wsp? "," wsp? axisval
+
+axisval         = signedfloat
+
+; ---------- Context ----------
+ctx             = "ctx" wsp? "(" wsp? tag wsp? ")"
+tag             = 1*( ALPHA / DIGIT / "_" / "-" )
+
+; ---------- Macro ----------
+macro           = 1*( ALPHA / DIGIT / "_" / "-" )
+; Recommendation: macros are uppercase, but grammar allows any identifier.
+
+; ---------- Numbers ----------
+signedfloat     = [sign] float
+sign            = "+" / "-"
+
+; Float forms:
+;  1) 0.7  2) .7  3) 1.0  4) 0  5) 1
+float           = ( 1*DIGIT ["." *DIGIT] ) / ( "." 1*DIGIT )
+
+; Mask must be in [0,1] by semantic validation (grammar allows any float)
+maskvalue       = signedfloat
+
+; ---------- Whitespace ----------
+wsp             = 1*( SP / HTAB )

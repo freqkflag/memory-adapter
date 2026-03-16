@@ -1,0 +1,27 @@
+{
+  "description": "Valid AST: Complex nested expression mask((E{0,0,0,0,0,0,0,0} ⊗ ctx(work)) ⊕ E{0,0,0,0,0,0,0,0}, 0.3)",
+  "ast": {
+    "type": "mask",
+    "expr": {
+      "type": "binaryOp",
+      "op": "⊕",
+      "left": {
+        "type": "binaryOp",
+        "op": "⊗",
+        "left": {
+          "type": "state",
+          "values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        },
+        "right": {
+          "type": "context",
+          "tag": "work"
+        }
+      },
+      "right": {
+        "type": "state",
+        "values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      }
+    },
+    "value": 0.3
+  }
+}

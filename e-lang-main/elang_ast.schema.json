@@ -1,0 +1,252 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/freqkflag/e-lang/schemas/elang_ast.schema.json",
+  "title": "E-Lang AST Serialization Schema",
+  "description": "JSON schema for serialized E-Lang Abstract Syntax Trees. This schema represents the structure of parsed E-Lang expressions without interpretation or evaluation.",
+  "definitions": {
+    "state": {
+      "type": "object",
+      "required": ["type", "values"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "state"
+        },
+        "values": {
+          "type": "array",
+          "description": "Exactly 8 axis values in order: V, A, C, S, K, D, B, N",
+          "items": {
+            "type": "number",
+            "minimum": -1.0,
+            "maximum": 1.0
+          },
+          "minItems": 8,
+          "maxItems": 8
+        }
+      },
+      "additionalProperties": false
+    },
+    "macro": {
+      "type": "object",
+      "required": ["type", "name"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "macro"
+        },
+        "name": {
+          "type": "string",
+          "description": "Macro identifier (alphanumeric, underscores, dashes)",
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "context": {
+      "type": "object",
+      "required": ["type", "tag"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "context"
+        },
+        "tag": {
+          "type": "string",
+          "description": "Context tag identifier (alphanumeric, underscores, dashes)",
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "maskCall": {
+      "type": "object",
+      "required": ["type", "expr", "value"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "mask"
+        },
+        "expr": {
+          "$ref": "#/$defs/expr"
+        },
+        "value": {
+          "type": "number",
+          "description": "Mask intensity value in range [0.0, 1.0]",
+          "minimum": 0.0,
+          "maximum": 1.0
+        }
+      },
+      "additionalProperties": false
+    },
+    "binaryOp": {
+      "type": "object",
+      "required": ["type", "op", "left", "right"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "binaryOp"
+        },
+        "op": {
+          "type": "string",
+          "description": "Binary operator",
+          "enum": ["→", "⊕", "⟂", "⊗"]
+        },
+        "left": {
+          "$ref": "#/$defs/expr"
+        },
+        "right": {
+          "$ref": "#/$defs/expr"
+        }
+      },
+      "additionalProperties": false
+    },
+    "expr": {
+      "oneOf": [
+        { "$ref": "#/$defs/state" },
+        { "$ref": "#/$defs/macro" },
+        { "$ref": "#/$defs/context" },
+        { "$ref": "#/$defs/maskCall" },
+        { "$ref": "#/$defs/binaryOp" }
+      ]
+    }
+  },
+  "$ref": "#/$defs/expr",
+  "examples": [
+    {
+      "description": "Valid: State node",
+      "value": {
+        "type": "state",
+        "values": [-0.4, 0.7, -0.2, -0.6, -0.1, -0.3, 0.8, 0.2]
+      }
+    },
+    {
+      "description": "Valid: Macro node",
+      "value": {
+        "type": "macro",
+        "name": "ALARM"
+      }
+    },
+    {
+      "description": "Valid: Transition (BinaryOp)",
+      "value": {
+        "type": "binaryOp",
+        "op": "→",
+        "left": {
+          "type": "state",
+          "values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        },
+        "right": {
+          "type": "state",
+          "values": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+        }
+      }
+    },
+    {
+      "description": "Valid: Mask call",
+      "value": {
+        "type": "mask",
+        "expr": {
+          "type": "state",
+          "values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        },
+        "value": 0.7
+      }
+    },
+    {
+      "description": "Valid: Context modulation",
+      "value": {
+        "type": "binaryOp",
+        "op": "⊗",
+        "left": {
+          "type": "state",
+          "values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        },
+        "right": {
+          "type": "context",
+          "tag": "work"
+        }
+      }
+    },
+    {
+      "description": "Valid: Complex nested expression",
+      "value": {
+        "type": "mask",
+        "expr": {
+          "type": "binaryOp",
+          "op": "⊕",
+          "left": {
+            "type": "binaryOp",
+            "op": "⊗",
+            "left": {
+              "type": "state",
+              "values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+            },
+            "right": {
+              "type": "context",
+              "tag": "work"
+            }
+          },
+          "right": {
+            "type": "state",
+            "values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+          }
+        },
+        "value": 0.3
+      }
+    }
+  ],
+  "invalidExamples": [
+    {
+      "description": "Invalid: State with wrong number of values",
+      "value": {
+        "type": "state",
+        "values": [0.0, 0.0, 0.0]
+      }
+    },
+    {
+      "description": "Invalid: State with out-of-range value",
+      "value": {
+        "type": "state",
+        "values": [2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      }
+    },
+    {
+      "description": "Invalid: Mask value out of range",
+      "value": {
+        "type": "mask",
+        "expr": {
+          "type": "state",
+          "values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        },
+        "value": 1.5
+      }
+    },
+    {
+      "description": "Invalid: Unknown operator",
+      "value": {
+        "type": "binaryOp",
+        "op": "+",
+        "left": {
+          "type": "state",
+          "values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        },
+        "right": {
+          "type": "state",
+          "values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        }
+      }
+    },
+    {
+      "description": "Invalid: Missing required field",
+      "value": {
+        "type": "state"
+      }
+    }
+  ],
+  "notes": [
+    "This schema represents AST structure only; no semantic interpretation is implied.",
+    "The 'type' field is required to discriminate between AST node types.",
+    "Operator precedence is not represented in the schema (it's structural only).",
+    "This schema is for interchange; implementations may use different internal representations."
+  ]
+}

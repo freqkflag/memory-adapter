@@ -1,0 +1,6 @@
+E{0,0,0,0,0,0,0}                      # wrong arity
+E{0,0,0,0,0,0,0,0,0}                  # wrong arity
+E{0,0,0,0,0,0,0,2.0}                  # out of range (semantic)
+E{0,0,0,0,0,0,0,}                     # trailing comma
+E{0 0 0 0 0 0 0 0}                    # missing commas
+E{V:0,A:0,C:0,S:0,K:0,D:0,B:0,N:0}     # not canonical vector syntax

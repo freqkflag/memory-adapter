@@ -1,0 +1,13 @@
+{
+  "description": "Valid E-Lang state with all axes",
+  "state": {
+    "V": -0.4,
+    "A": 0.7,
+    "C": -0.2,
+    "S": -0.6,
+    "K": -0.1,
+    "D": -0.3,
+    "B": 0.8,
+    "N": 0.2
+  }
+}

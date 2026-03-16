@@ -1,0 +1,15 @@
+{
+  "description": "Valid AST: Transition expression E{0,0,0,0,0,0,0,0} → E{1,1,1,1,1,1,1,1}",
+  "ast": {
+    "type": "binaryOp",
+    "op": "→",
+    "left": {
+      "type": "state",
+      "values": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    },
+    "right": {
+      "type": "state",
+      "values": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    }
+  }
+}
