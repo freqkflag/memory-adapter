@@ -36,5 +36,9 @@ export class CognitionCoordinator {
   getOperationLog(): OperationLog {
     return this.opLog;
   }
+
+  getMemoryService(): MemoryService {
+    return this.memory;
+  }
 }
 

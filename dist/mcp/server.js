@@ -84,6 +84,20 @@ export async function runMcpServer() {
         const result = await tools.system_report();
         return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
     });
+    server.registerTool("ingest_document_summary", {
+        description: "Ingest a document summary into markdown memory",
+        inputSchema: z.object({
+            text: z.string().describe("Summary text to store"),
+            domain: z
+                .string()
+                .optional()
+                .describe("Optional memory domain (identity, timeline, current_state, creative, projects, reflection, prediction, emotion)"),
+            source: z.string().optional().describe("Optional source identifier or filename")
+        })
+    }, async ({ text, domain, source }) => {
+        const result = await tools.ingest_document_summary({ text, domain, source });
+        return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    });
     // Resources
     const resourceUris = [
         "user://identity",

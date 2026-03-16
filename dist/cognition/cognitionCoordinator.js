@@ -30,4 +30,7 @@ export class CognitionCoordinator {
     getOperationLog() {
         return this.opLog;
     }
+    getMemoryService() {
+        return this.memory;
+    }
 }

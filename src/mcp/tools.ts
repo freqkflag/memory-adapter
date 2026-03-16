@@ -5,6 +5,8 @@ import { ReflectionAgent } from "../agents/reflectionAgent.js";
 import { PredictionAgent } from "../agents/predictionAgent.js";
 import { VerificationAgent } from "../agents/verificationAgent.js";
 import { SystemIntrospectionAgent } from "../agents/systemIntrospectionAgent.js";
+import { WriterAgent } from "../agents/writerAgent.js";
+import type { MemoryDomain } from "../memory/domains.js";
 
 export function createTools(coordinator: CognitionCoordinator) {
   const planner = new PlannerAgent(coordinator);
@@ -13,6 +15,7 @@ export function createTools(coordinator: CognitionCoordinator) {
   const prediction = new PredictionAgent(coordinator);
   const verification = new VerificationAgent(coordinator);
   const introspection = new SystemIntrospectionAgent(coordinator);
+  const writer = new WriterAgent(coordinator.getMemoryService(), coordinator);
 
   return {
     async get_user_summary() {
@@ -53,6 +56,28 @@ export function createTools(coordinator: CognitionCoordinator) {
     },
     async system_report() {
       return introspection.analyze();
+    },
+    async ingest_document_summary(input: { text: string; domain?: string; source?: string }) {
+      const allowedDomains: MemoryDomain[] = [
+        "identity",
+        "timeline",
+        "current_state",
+        "creative",
+        "projects",
+        "reflection",
+        "prediction",
+        "emotion"
+      ];
+      const requested = (input.domain ?? "timeline") as MemoryDomain;
+      const domain: MemoryDomain = allowedDomains.includes(requested) ? requested : "timeline";
+      const item = await writer.write(domain, input.text);
+      await coordinator.logOperation({
+        agentId: "ingest-document-summary",
+        action: "ingest_document_summary",
+        targetMemoryId: item.id,
+        payload: { source: input.source, domain }
+      });
+      return item;
     }
   };
 }

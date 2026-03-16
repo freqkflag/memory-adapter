@@ -22,14 +22,20 @@ export class SystemIntrospectionAgent {
     }
     async readOperations(opLog) {
         // Re-open the log file to compute metrics; keep OperationLog write-only for normal flow.
-        const fs = await import("fs/promises");
+        const fs = await import("node:fs/promises");
         const path = "memory/operations.log";
         let text = "";
         try {
             text = await fs.readFile(path, "utf8");
         }
-        catch {
-            return [];
+        catch (err) {
+            if (err && err.code === "ENOENT") {
+                // If the log does not exist yet, treat as empty and create it for future writes.
+                await fs.mkdir("memory", { recursive: true });
+                await fs.writeFile(path, "", "utf8");
+                return [];
+            }
+            throw err;
         }
         const lines = text
             .split(/\r?\n/)
