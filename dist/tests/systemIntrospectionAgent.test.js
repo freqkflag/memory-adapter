@@ -39,4 +39,6 @@ export async function runSystemIntrospectionTests() {
     const report = await agent.analyze();
     assert.ok(report.metrics.memoryCount >= 1);
     assert.ok(report.alerts.length >= 1);
+    assert.ok(report.memoryStats.totalCount >= 1);
+    assert.ok(report.anomalySignals.signals.length >= 0);
 }

@@ -1,16 +1,6 @@
-import { normalizeText, tokenize } from "../utils/text.js";
-function embed(text) {
-    const tokens = tokenize(text);
-    const vec = [];
-    for (const token of tokens) {
-        let hash = 0;
-        for (let i = 0; i < token.length; i++) {
-            hash = (hash * 31 + token.charCodeAt(i)) >>> 0;
-        }
-        vec.push(hash % 997);
-    }
-    return vec;
-}
+import { normalizeText } from "../utils/text.js";
+import { getDefaultEmbeddingProvider } from "../core/retrieval/embeddingProvider.js";
+const embeddingProvider = getDefaultEmbeddingProvider();
 function cosineSimilarity(a, b) {
     if (a.length === 0 || b.length === 0)
         return 0;
@@ -28,10 +18,10 @@ function cosineSimilarity(a, b) {
     return dot / (Math.sqrt(na) * Math.sqrt(nb));
 }
 export function vectorSearch(query, items, topK) {
-    const qVec = embed(normalizeText(query));
+    const qVec = embeddingProvider.embed(normalizeText(query));
     const results = [];
     for (const item of items) {
-        const score = cosineSimilarity(qVec, embed(normalizeText(item.text)));
+        const score = cosineSimilarity(qVec, embeddingProvider.embed(normalizeText(item.text)));
         results.push({ item, score });
     }
     return results

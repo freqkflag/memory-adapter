@@ -3,6 +3,10 @@ import { MemoryGraph } from "../../graph/memoryGraph.js";
 import { hybridRetrieve, type HybridRetrievalConfig } from "../../search/hybridSearch.js";
 import type { RankedResult } from "../../ranking/rankAndFilter.js";
 import { normalizeText, tokenize } from "../../utils/text.js";
+import {
+  type EmbeddingProvider,
+  getDefaultEmbeddingProvider
+} from "../retrieval/embeddingProvider.js";
 
 export interface MemoryDb {
   initialize(items: MemoryItem[]): void;
@@ -18,6 +22,8 @@ export class InMemoryDb implements MemoryDb {
   private keywordIndex = new Map<string, string[]>();
   private embeddingIndex = new Map<string, number[]>();
   private graph: MemoryGraph = new MemoryGraph();
+
+  constructor(private readonly embeddingProvider: EmbeddingProvider = getDefaultEmbeddingProvider()) {}
 
   initialize(items: MemoryItem[]): void {
     this.items = [...items];
@@ -37,7 +43,7 @@ export class InMemoryDb implements MemoryDb {
     const norm = normalizeText(item.text);
     this.normalizedText.set(item.id, norm);
     this.keywordIndex.set(item.id, tokenize(norm));
-    this.embeddingIndex.set(item.id, this.embed(norm));
+    this.embeddingIndex.set(item.id, this.embeddingProvider.embed(norm));
     this.graph = MemoryGraph.buildFromMemories(this.items);
   }
 
@@ -60,23 +66,8 @@ export class InMemoryDb implements MemoryDb {
       const norm = normalizeText(item.text);
       this.normalizedText.set(item.id, norm);
       this.keywordIndex.set(item.id, tokenize(norm));
-      this.embeddingIndex.set(item.id, this.embed(norm));
+      this.embeddingIndex.set(item.id, this.embeddingProvider.embed(norm));
     }
     this.graph = MemoryGraph.buildFromMemories(this.items);
   }
-
-  private embed(text: string): number[] {
-    // Simple deterministic embedding mirroring vectorSearch behavior.
-    const tokens = tokenize(text);
-    const vec: number[] = [];
-    for (const token of tokens) {
-      let hash = 0;
-      for (let i = 0; i < token.length; i++) {
-        hash = (hash * 31 + token.charCodeAt(i)) >>> 0;
-      }
-      vec.push(hash % 997);
-    }
-    return vec;
-  }
 }
-

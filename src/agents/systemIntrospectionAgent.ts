@@ -3,6 +3,8 @@ import { AgentRole } from "../planning/agentRoles.js";
 import { Operation } from "../cognition/operationLog.js";
 import { MemoryItem } from "../memory/MemoryItem.js";
 import { normalizeText } from "../utils/text.js";
+import { computeMemoryStats, type MemoryStats } from "../core/memory/memoryStats.js";
+import { detectTemporalAnomaly, type TemporalAnomalySummary } from "../core/memory/temporalAnomalyDetector.js";
 
 export interface SystemMetrics {
   memoryCount: number;
@@ -18,6 +20,8 @@ export interface SystemMetrics {
 export interface SystemReport {
   metrics: SystemMetrics;
   alerts: string[];
+  memoryStats: MemoryStats;
+  anomalySignals: TemporalAnomalySummary;
 }
 
 export class SystemIntrospectionAgent {
@@ -33,15 +37,21 @@ export class SystemIntrospectionAgent {
     const ops = await this.readOperations(opLog);
 
     const metrics = this.computeMetrics(memories, ops);
+    const memoryStats = computeMemoryStats(memories);
+    const anomalySignals = detectTemporalAnomaly(memories);
     const alerts = this.generateAlerts(metrics);
 
     await this.coordinator.logOperation({
       agentId: this.id,
       action: "system_introspection",
-      payload: metrics
+      payload: {
+        metrics,
+        memoryStats,
+        anomalySignals
+      }
     });
 
-    return { metrics, alerts };
+    return { metrics, alerts, memoryStats, anomalySignals };
   }
 
   private async readOperations(opLog: { record: (op: any) => Promise<Operation> }): Promise<Operation[]> {

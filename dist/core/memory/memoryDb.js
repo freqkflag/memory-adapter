@@ -1,12 +1,17 @@
 import { MemoryGraph } from "../../graph/memoryGraph.js";
 import { hybridRetrieve } from "../../search/hybridSearch.js";
 import { normalizeText, tokenize } from "../../utils/text.js";
+import { getDefaultEmbeddingProvider } from "../retrieval/embeddingProvider.js";
 export class InMemoryDb {
+    embeddingProvider;
     items = [];
     normalizedText = new Map();
     keywordIndex = new Map();
     embeddingIndex = new Map();
     graph = new MemoryGraph();
+    constructor(embeddingProvider = getDefaultEmbeddingProvider()) {
+        this.embeddingProvider = embeddingProvider;
+    }
     initialize(items) {
         this.items = [...items];
         this.rebuildIndexes();
@@ -22,7 +27,7 @@ export class InMemoryDb {
         const norm = normalizeText(item.text);
         this.normalizedText.set(item.id, norm);
         this.keywordIndex.set(item.id, tokenize(norm));
-        this.embeddingIndex.set(item.id, this.embed(norm));
+        this.embeddingIndex.set(item.id, this.embeddingProvider.embed(norm));
         this.graph = MemoryGraph.buildFromMemories(this.items);
     }
     search(query, limit = 20) {
@@ -44,21 +49,8 @@ export class InMemoryDb {
             const norm = normalizeText(item.text);
             this.normalizedText.set(item.id, norm);
             this.keywordIndex.set(item.id, tokenize(norm));
-            this.embeddingIndex.set(item.id, this.embed(norm));
+            this.embeddingIndex.set(item.id, this.embeddingProvider.embed(norm));
         }
         this.graph = MemoryGraph.buildFromMemories(this.items);
-    }
-    embed(text) {
-        // Simple deterministic embedding mirroring vectorSearch behavior.
-        const tokens = tokenize(text);
-        const vec = [];
-        for (const token of tokens) {
-            let hash = 0;
-            for (let i = 0; i < token.length; i++) {
-                hash = (hash * 31 + token.charCodeAt(i)) >>> 0;
-            }
-            vec.push(hash % 997);
-        }
-        return vec;
     }
 }

@@ -1,23 +1,13 @@
 import { MemoryItem } from "../memory/MemoryItem.js";
-import { normalizeText, tokenize } from "../utils/text.js";
+import { normalizeText } from "../utils/text.js";
+import { getDefaultEmbeddingProvider } from "../core/retrieval/embeddingProvider.js";
 
 export interface VectorSearchResult {
   item: MemoryItem;
   score: number;
 }
 
-function embed(text: string): number[] {
-  const tokens = tokenize(text);
-  const vec: number[] = [];
-  for (const token of tokens) {
-    let hash = 0;
-    for (let i = 0; i < token.length; i++) {
-      hash = (hash * 31 + token.charCodeAt(i)) >>> 0;
-    }
-    vec.push(hash % 997);
-  }
-  return vec;
-}
+const embeddingProvider = getDefaultEmbeddingProvider();
 
 function cosineSimilarity(a: number[], b: number[]): number {
   if (a.length === 0 || b.length === 0) return 0;
@@ -35,10 +25,10 @@ function cosineSimilarity(a: number[], b: number[]): number {
 }
 
 export function vectorSearch(query: string, items: MemoryItem[], topK: number): VectorSearchResult[] {
-  const qVec = embed(normalizeText(query));
+  const qVec = embeddingProvider.embed(normalizeText(query));
   const results: VectorSearchResult[] = [];
   for (const item of items) {
-    const score = cosineSimilarity(qVec, embed(normalizeText(item.text)));
+    const score = cosineSimilarity(qVec, embeddingProvider.embed(normalizeText(item.text)));
     results.push({ item, score });
   }
   return results

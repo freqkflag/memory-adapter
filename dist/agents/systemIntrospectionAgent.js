@@ -1,4 +1,6 @@
 import { normalizeText } from "../utils/text.js";
+import { computeMemoryStats } from "../core/memory/memoryStats.js";
+import { detectTemporalAnomaly } from "../core/memory/temporalAnomalyDetector.js";
 export class SystemIntrospectionAgent {
     coordinator;
     id = "system-introspection";
@@ -12,13 +14,19 @@ export class SystemIntrospectionAgent {
         const opLog = this.coordinator.getOperationLog();
         const ops = await this.readOperations(opLog);
         const metrics = this.computeMetrics(memories, ops);
+        const memoryStats = computeMemoryStats(memories);
+        const anomalySignals = detectTemporalAnomaly(memories);
         const alerts = this.generateAlerts(metrics);
         await this.coordinator.logOperation({
             agentId: this.id,
             action: "system_introspection",
-            payload: metrics
+            payload: {
+                metrics,
+                memoryStats,
+                anomalySignals
+            }
         });
-        return { metrics, alerts };
+        return { metrics, alerts, memoryStats, anomalySignals };
     }
     async readOperations(opLog) {
         // Re-open the log file to compute metrics; keep OperationLog write-only for normal flow.
