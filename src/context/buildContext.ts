@@ -1,5 +1,9 @@
-import { ScoredItem } from "../ranking/rerankResults";
-import { MemoryItem } from "../types";
+import { MemoryItem } from "../memory/MemoryItem";
+
+export interface ScoredItem {
+  item: MemoryItem;
+  score: number;
+}
 
 export interface ContextResult {
   items: MemoryItem[];

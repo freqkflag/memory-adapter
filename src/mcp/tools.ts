@@ -5,6 +5,7 @@ import { ReflectionAgent } from "../agents/reflectionAgent";
 import { PredictionAgent } from "../agents/predictionAgent";
 import { PlannerAgent } from "../agents/plannerAgent";
 import { VerificationAgent } from "../agents/verificationAgent";
+import { WriterAgent } from "../agents/writerAgent";
 import { AgentRegistry, Agent } from "../cognition/agentRegistry";
 import { CognitionCoordinator } from "../cognition/cognitionCoordinator";
 import { ChangeBroadcast } from "../cognition/changeBroadcast";
@@ -51,6 +52,30 @@ export async function generate_predictions(ctx: MCPContext): Promise<string[]> {
   const predictionAgent = new PredictionAgent();
   const preds = predictionAgent.predict(items);
   return preds.map((p) => p.prediction);
+}
+
+export async function write_memory(
+  ctx: MCPContext,
+  params: {
+    domain: string;
+    text: string;
+    sectionPath?: string[];
+    tags?: string[];
+    createdBy?: string;
+  }
+): Promise<string> {
+  const writer = new WriterAgent(ctx.memoryService, ctx.coordinator);
+  const sectionPath = params.sectionPath ?? [];
+  const tags = params.tags ?? [];
+  const createdBy = params.createdBy ?? "mcp";
+  const item = await writer.write(
+    params.domain as any,
+    params.text,
+    sectionPath,
+    tags,
+    createdBy
+  );
+  return item.id;
 }
 
 export async function register_agent(
