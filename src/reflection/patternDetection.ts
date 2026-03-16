@@ -1,3 +1,31 @@
+import { MemoryItem } from "../memory/MemoryItem";
+
+export interface DetectedPattern {
+  description: string;
+  episodeIds: string[];
+}
+
+export function detectPatterns(episodes: MemoryItem[]): DetectedPattern[] {
+  const byTag = new Map<string, string[]>();
+  for (const ep of episodes) {
+    for (const tag of ep.tags) {
+      const list = byTag.get(tag) ?? [];
+      list.push(ep.id);
+      byTag.set(tag, list);
+    }
+  }
+
+  const patterns: DetectedPattern[] = [];
+  for (const [tag, ids] of byTag.entries()) {
+    if (ids.length < 2) continue;
+    patterns.push({
+      description: `Episodes frequently tagged with #${tag}.`,
+      episodeIds: ids
+    });
+  }
+  return patterns;
+}
+
 import { Insight } from "../types";
 import { EpisodeSummary } from "./summarizeEpisodes";
 
