@@ -34,8 +34,8 @@ export function createTools(coordinator: CognitionCoordinator) {
       const results = await retriever.retrieve(input.query);
       return results.map((r) => ({ id: r.item.id, text: r.item.text, score: r.score }));
     },
-    async generate_reflection() {
-      return reflection.reflect();
+    async generate_reflection(input?: { mode?: "identityConsolidation" | "problemSolving" | "timelineReview" }) {
+      return reflection.reflect(input?.mode);
     },
     async generate_predictions() {
       return prediction.predict();
