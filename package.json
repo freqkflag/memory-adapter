@@ -9,6 +9,7 @@
     "validate": "ts-node src/scripts/validate.ts",
     "diagnostics": "ts-node src/scripts/systemDiagnostics.ts",
     "test": "vitest run",
+    "mcp-stdio": "ts-node src/mcp/stdioServer.ts",
     "test:legacy": "ts-node src/scripts/test.ts"
   },
   "keywords": [
@@ -26,7 +27,8 @@
     "ts-node": "^10.9.2",
     "typescript": "^5.7.0",
     "@types/node": "^22.10.2",
-    "vitest": "^2.0.5"
+    "vitest": "^2.0.5",
+    "zod": "^4.3.6"
   },
   "engines": {
     "node": ">=20.0.0"
