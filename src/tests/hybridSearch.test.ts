@@ -1,7 +1,7 @@
 import assert from "assert";
-import { hybridRetrieve } from "../search/hybridSearch";
-import { MemoryGraph } from "../graph/memoryGraph";
-import { MemoryItem } from "../memory/MemoryItem";
+import { hybridRetrieve } from "../search/hybridSearch.js";
+import { MemoryGraph } from "../graph/memoryGraph.js";
+import { MemoryItem } from "../memory/MemoryItem.js";
 
 export function runHybridSearchTests() {
   const base: Omit<MemoryItem, "id"> = {

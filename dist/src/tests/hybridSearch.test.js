@@ -1,6 +1,6 @@
 import assert from "assert";
-import { hybridRetrieve } from "../search/hybridSearch";
-import { MemoryGraph } from "../graph/memoryGraph";
+import { hybridRetrieve } from "../search/hybridSearch.js";
+import { MemoryGraph } from "../graph/memoryGraph.js";
 export function runHybridSearchTests() {
     const base = {
         text: "",

@@ -1,6 +1,6 @@
 import assert from "assert";
-import { generatePredictions, isPredictionActive } from "../prediction/predictionEngine";
-import { MemoryItem } from "../memory/MemoryItem";
+import { generatePredictions, isPredictionActive } from "../prediction/predictionEngine.js";
+import { MemoryItem } from "../memory/MemoryItem.js";
 
 export function runPredictionEngineTests() {
   const base: Omit<MemoryItem, "id"> = {

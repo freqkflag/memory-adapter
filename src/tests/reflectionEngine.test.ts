@@ -1,6 +1,6 @@
 import assert from "assert";
-import { generateReflections } from "../reflection/reflectionEngine";
-import { MemoryItem } from "../memory/MemoryItem";
+import { generateReflections } from "../reflection/reflectionEngine.js";
+import { MemoryItem } from "../memory/MemoryItem.js";
 
 export function runReflectionEngineTests() {
   const base: Omit<MemoryItem, "id"> = {

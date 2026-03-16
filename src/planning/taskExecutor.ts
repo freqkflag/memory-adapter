@@ -1,4 +1,4 @@
-import { Task } from "./taskPlanner";
+import { Task } from "./taskPlanner.js";
 
 export class TaskExecutor {
   constructor(private runTask: (task: Task) => Promise<void>) {}

@@ -1,12 +1,12 @@
-import { MemoryService } from "../memory/MemoryService";
-import { parseELang } from "../emotion/elangParser";
-import { MemoryGraph } from "../graph/memoryGraph";
-import { traverseGraph } from "../graph/graphTraversal";
-import { hybridRetrieve } from "../search/hybridSearch";
-import { generateReflections } from "../reflection/reflectionEngine";
-import { generatePredictions, isPredictionActive } from "../prediction/predictionEngine";
-import { resolveDuplicateWrites } from "../cognition/conflictResolver";
-import { MemoryItem } from "../memory/MemoryItem";
+import { MemoryService } from "../memory/MemoryService.js";
+import { parseELang } from "../emotion/elangParser.js";
+import { MemoryGraph } from "../graph/memoryGraph.js";
+import { traverseGraph } from "../graph/graphTraversal.js";
+import { hybridRetrieve } from "../search/hybridSearch.js";
+import { generateReflections } from "../reflection/reflectionEngine.js";
+import { generatePredictions, isPredictionActive } from "../prediction/predictionEngine.js";
+import { resolveDuplicateWrites } from "../cognition/conflictResolver.js";
+import { MemoryItem } from "../memory/MemoryItem.js";
 
 async function run() {
   const memory = new MemoryService();
@@ -39,7 +39,7 @@ async function run() {
 
   // Prediction scoring
   const predictions = generatePredictions(all);
-  const activeCount = predictions.filter(isPredictionActive).length;
+  const activeCount = predictions.filter(p => isPredictionActive(p)).length;
   // eslint-disable-next-line no-console
   console.log("Predictions (active):", activeCount);
 

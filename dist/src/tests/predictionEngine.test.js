@@ -1,5 +1,5 @@
 import assert from "assert";
-import { generatePredictions, isPredictionActive } from "../prediction/predictionEngine";
+import { generatePredictions, isPredictionActive } from "../prediction/predictionEngine.js";
 export function runPredictionEngineTests() {
     const base = {
         text: "",

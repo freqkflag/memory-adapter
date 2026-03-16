@@ -1,5 +1,5 @@
 import assert from "assert";
-import { resolveDuplicateWrites } from "../cognition/conflictResolver";
+import { resolveDuplicateWrites } from "../cognition/conflictResolver.js";
 export function runConflictResolverTests() {
     const base = {
         id: "m1",

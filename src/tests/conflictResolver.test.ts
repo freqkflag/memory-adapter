@@ -1,6 +1,6 @@
 import assert from "assert";
-import { resolveDuplicateWrites } from "../cognition/conflictResolver";
-import { MemoryItem } from "../memory/MemoryItem";
+import { resolveDuplicateWrites } from "../cognition/conflictResolver.js";
+import { MemoryItem } from "../memory/MemoryItem.js";
 
 export function runConflictResolverTests() {
   const base: MemoryItem = {

@@ -1,11 +1,11 @@
 import assert from "assert";
-import { SystemIntrospectionAgent } from "../agents/systemIntrospectionAgent";
-import { CognitionCoordinator } from "../cognition/cognitionCoordinator";
-import { MemoryService } from "../memory/MemoryService";
-import { AgentRegistry } from "../cognition/agentRegistry";
-import { OperationLog } from "../cognition/operationLog";
-import { ChangeBroadcast } from "../cognition/changeBroadcast";
-import { MemoryItem } from "../memory/MemoryItem";
+import { SystemIntrospectionAgent } from "../agents/systemIntrospectionAgent.js";
+import { CognitionCoordinator } from "../cognition/cognitionCoordinator.js";
+import { MemoryService } from "../memory/MemoryService.js";
+import { AgentRegistry } from "../cognition/agentRegistry.js";
+import { OperationLog } from "../cognition/operationLog.js";
+import { ChangeBroadcast } from "../cognition/changeBroadcast.js";
+import { MemoryItem } from "../memory/MemoryItem.js";
 
 export async function runSystemIntrospectionTests() {
   const memoryService = new MemoryService();

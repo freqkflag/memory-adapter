@@ -1,4 +1,4 @@
-import { Insight } from "./verifyInsight";
+import { Insight } from "./verifyInsight.js";
 
 export interface CounterfactualPair {
   insight: Insight;

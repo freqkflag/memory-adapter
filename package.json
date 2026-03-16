@@ -14,7 +14,8 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "node dist/mcp/server.js",
-    "test": "vitest run"
+    "test": "vitest run",
+    "postinstall": "node dist/installer/installMCP.js"
   },
   "keywords": [
     "personal-ai",

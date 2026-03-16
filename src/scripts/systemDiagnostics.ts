@@ -1,8 +1,8 @@
-import { MemoryService } from "../memory/MemoryService";
-import { MemoryGraph } from "../graph/memoryGraph";
-import { generatePredictions } from "../prediction/predictionEngine";
-import { generateReflections } from "../reflection/reflectionEngine";
-import { OperationLog } from "../cognition/operationLog";
+import { MemoryService } from "../memory/MemoryService.js";
+import { MemoryGraph } from "../graph/memoryGraph.js";
+import { generatePredictions } from "../prediction/predictionEngine.js";
+import { generateReflections } from "../reflection/reflectionEngine.js";
+import { OperationLog } from "../cognition/operationLog.js";
 
 async function main() {
   const memory = new MemoryService();
@@ -29,7 +29,7 @@ async function main() {
 
   // Prediction accuracy proxy
   const avgPredictionConfidence =
-    predictions.reduce((sum, p) => sum + p.confidence, 0) / (predictions.length || 1);
+    predictions.reduce((sum: number, p) => sum + p.confidence, 0) / (predictions.length || 1);
 
   // Reflection rate proxy
   const reflectionCount = reflections.insights.length;
