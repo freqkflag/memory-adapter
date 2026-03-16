@@ -6,6 +6,7 @@ import * as emotion from "../core/emotion/index.js";
 import * as planning from "../core/planning/index.js";
 import * as cognition from "../core/cognition/index.js";
 import { MemoryService } from "../memory/MemoryService.js";
+import { InMemoryDb } from "../core/memory/memoryDb.js";
 import { AgentRegistry } from "../cognition/agentRegistry.js";
 import { OperationLog } from "../cognition/operationLog.js";
 import { ChangeBroadcast } from "../cognition/changeBroadcast.js";
@@ -14,6 +15,7 @@ import { PlannerAgent } from "../agents/plannerAgent.js";
 
 export interface AIOS {
   memory: typeof memory;
+  db: InMemoryDb;
   retrieval: typeof retrieval;
   reflection: typeof reflection;
   prediction: typeof prediction;
@@ -32,14 +34,18 @@ export async function createAIOS(): Promise<AIOS> {
   const memoryService = new MemoryService();
   await memoryService.loadAll("ai-os");
 
+  const db = new InMemoryDb();
+  db.initialize(memoryService.getAll());
+
   const agents = new AgentRegistry();
   const opLog = new OperationLog();
   const broadcaster = new ChangeBroadcast();
-  const coordinator = new CognitionCoordinator(memoryService, agents, opLog, broadcaster);
+  const coordinator = new CognitionCoordinator(memoryService, db, agents, opLog, broadcaster);
   const plannerAgent = new PlannerAgent(coordinator);
 
   return {
     memory,
+    db,
     retrieval,
     reflection,
     prediction,

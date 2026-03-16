@@ -12,7 +12,7 @@ export function createTools(coordinator) {
     const prediction = new PredictionAgent(coordinator);
     const verification = new VerificationAgent(coordinator);
     const introspection = new SystemIntrospectionAgent(coordinator);
-    const writer = new WriterAgent(coordinator.getMemoryService(), coordinator);
+    const writer = new WriterAgent(coordinator.getMemoryService(), coordinator["db"], coordinator);
     return {
         async get_user_summary() {
             const agents = coordinator.listAgents();

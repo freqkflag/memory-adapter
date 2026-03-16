@@ -4,3 +4,4 @@ export * from "../../memory/MemoryService.js";
 export * from "../../markdown/sectionParser.js";
 export * from "../../markdown/parseMemory.js";
 export * from "../../markdown/writeMemory.js";
+export * from "./memoryDb.js";

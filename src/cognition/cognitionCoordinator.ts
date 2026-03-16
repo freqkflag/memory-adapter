@@ -2,12 +2,12 @@ import { MemoryService } from "../memory/MemoryService.js";
 import { AgentRegistry } from "./agentRegistry.js";
 import { OperationLog, Operation } from "./operationLog.js";
 import { ChangeBroadcast } from "./changeBroadcast.js";
-import { MemoryGraph } from "../graph/memoryGraph.js";
-import { hybridRetrieve } from "../search/hybridSearch.js";
+import type { MemoryDb } from "../core/memory/memoryDb.js";
 
 export class CognitionCoordinator {
   constructor(
     private readonly memory: MemoryService,
+    private readonly db: MemoryDb,
     private readonly agents: AgentRegistry,
     private readonly opLog: OperationLog,
     private readonly broadcaster: ChangeBroadcast
@@ -20,9 +20,7 @@ export class CognitionCoordinator {
   }
 
   async retrieveContext(query: string) {
-    const memories = this.memory.getAll();
-    const graph = MemoryGraph.buildFromMemories(memories);
-    return hybridRetrieve(query, memories, graph);
+    return this.db.search(query);
   }
 
   listAgents() {
