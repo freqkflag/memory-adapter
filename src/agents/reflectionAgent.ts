@@ -1,6 +1,6 @@
-import { CognitionCoordinator } from "../cognition/cognitionCoordinator";
-import { AgentRole } from "../planning/agentRoles";
-import { generateReflections } from "../reflection/reflectionEngine";
+import { CognitionCoordinator } from "../cognition/cognitionCoordinator.js";
+import { AgentRole } from "../planning/agentRoles.js";
+import { generateReflections } from "../reflection/reflectionEngine.js";
 
 export class ReflectionAgent {
   readonly id = "reflection";

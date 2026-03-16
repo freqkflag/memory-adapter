@@ -1,8 +1,8 @@
-import { MemoryItem } from "../memory/MemoryItem";
-import { VectorSearchResult } from "../search/vectorSearch";
-import { KeywordSearchResult } from "../search/keywordSearch";
-import { RetrievalProfile } from "./retrievalProfiles";
-import { now } from "../utils/time";
+import { MemoryItem } from "../memory/MemoryItem.js";
+import { VectorSearchResult } from "../search/vectorSearch.js";
+import { KeywordSearchResult } from "../search/keywordSearch.js";
+import { RetrievalProfile } from "./retrievalProfiles.js";
+import { now } from "../utils/time.js";
 
 export interface RankedResult {
   item: MemoryItem;

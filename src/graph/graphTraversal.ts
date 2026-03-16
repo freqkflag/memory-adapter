@@ -1,4 +1,4 @@
-import { MemoryGraph } from "./memoryGraph";
+import { MemoryGraph } from "./memoryGraph.js";
 
 export interface TraversalResult {
   nodeId: string;

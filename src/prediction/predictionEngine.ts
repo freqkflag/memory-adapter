@@ -1,8 +1,8 @@
-import { MemoryItem } from "../memory/MemoryItem";
-import { minePredictivePatterns } from "./patternMining";
-import { scorePrediction } from "./predictionScoring";
-import { generateId } from "../utils/ids";
-import { hoursFromNow } from "../utils/time";
+import { MemoryItem } from "../memory/MemoryItem.js";
+import { minePredictivePatterns } from "./patternMining.js";
+import { scorePrediction } from "./predictionScoring.js";
+import { generateId } from "../utils/ids.js";
+import { hoursFromNow } from "../utils/time.js";
 
 export interface Prediction {
   id: string;

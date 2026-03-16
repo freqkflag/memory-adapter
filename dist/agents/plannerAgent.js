@@ -1,16 +1,14 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PlannerAgent = void 0;
-const taskPlanner_1 = require("../planning/taskPlanner");
-class PlannerAgent {
+import { decomposeGoal } from "../planning/taskPlanner";
+export class PlannerAgent {
+    coordinator;
+    id = "planner";
+    name = "Planner Agent";
+    type = "plannerAgent";
     constructor(coordinator) {
         this.coordinator = coordinator;
-        this.id = "planner";
-        this.name = "Planner Agent";
-        this.type = "plannerAgent";
     }
     async plan(goal) {
-        const task = (0, taskPlanner_1.decomposeGoal)(goal, [
+        const task = decomposeGoal(goal, [
             "retrieverAgent",
             "writerAgent",
             "reflectionAgent",
@@ -26,4 +24,3 @@ class PlannerAgent {
         return task;
     }
 }
-exports.PlannerAgent = PlannerAgent;

@@ -1,5 +1,5 @@
-import { AgentRole } from "./agentRoles";
-import { generateId } from "../utils/ids";
+import { AgentRole } from "./agentRoles.js";
+import { generateId } from "../utils/ids.js";
 
 export type TaskStatus = "pending" | "running" | "done";
 

@@ -1,10 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { MemoryService } from "../../src/memory/MemoryService";
-import { MemoryItem } from "../../src/memory/MemoryItem";
-import { MemoryGraph } from "../../src/graph/memoryGraph";
-import { hybridRetrieve } from "../../src/search/hybridSearch";
-import { generatePredictions } from "../../src/prediction/predictionEngine";
-import { generateReflections } from "../../src/reflection/reflectionEngine";
+import { MemoryService } from "../../src/memory/MemoryService.js";
+import { MemoryItem } from "../../src/memory/MemoryItem.js";
+import { MemoryGraph } from "../../src/graph/memoryGraph.js";
+import { hybridRetrieve } from "../../src/search/hybridSearch.js";
+import { generatePredictions } from "../../src/prediction/predictionEngine.js";
+import { generateReflections } from "../../src/reflection/reflectionEngine.js";
 
 describe("System Stress and Memory Growth", () => {
   it("handles large memory graphs and repeated retrieval/reflection/prediction", async () => {

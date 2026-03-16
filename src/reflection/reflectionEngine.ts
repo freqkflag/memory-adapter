@@ -1,7 +1,7 @@
-import { MemoryItem } from "../memory/MemoryItem";
-import { detectSimplePatterns } from "./patternDetection";
-import { verifyInsight, Insight } from "./verifyInsight";
-import { generateCounterfactual } from "./counterfactualEngine";
+import { MemoryItem } from "../memory/MemoryItem.js";
+import { detectSimplePatterns } from "./patternDetection.js";
+import { verifyInsight, Insight } from "./verifyInsight.js";
+import { generateCounterfactual } from "./counterfactualEngine.js";
 
 export interface ReflectionResult {
   insights: Insight[];

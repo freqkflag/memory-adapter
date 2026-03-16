@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { hybridRetrieve } from "../../src/search/hybridSearch";
-import { MemoryGraph } from "../../src/graph/memoryGraph";
-import { MemoryItem } from "../../src/memory/MemoryItem";
+import { hybridRetrieve } from "../../src/search/hybridSearch.js";
+import { MemoryGraph } from "../../src/graph/memoryGraph.js";
+import { MemoryItem } from "../../src/memory/MemoryItem.js";
 
 describe("Hybrid Retrieval", () => {
   it("combines vector, keyword, and graph relevance", () => {

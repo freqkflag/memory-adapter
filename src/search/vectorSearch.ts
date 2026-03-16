@@ -1,5 +1,5 @@
-import { MemoryItem } from "../memory/MemoryItem";
-import { normalizeText, tokenize } from "../utils/text";
+import { MemoryItem } from "../memory/MemoryItem.js";
+import { normalizeText, tokenize } from "../utils/text.js";
 
 export interface VectorSearchResult {
   item: MemoryItem;

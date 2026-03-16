@@ -1,10 +1,10 @@
 import { promises as fs } from "fs";
-import { MemoryItem } from "./MemoryItem";
-import { DOMAIN_FILE_MAP, MemoryDomain } from "./domains";
-import { parseMemoryMarkdown } from "../markdown/parseMemory";
-import { appendMemoryItemsToMarkdown } from "../markdown/writeMemory";
-import { generateId } from "../utils/ids";
-import { now } from "../utils/time";
+import { MemoryItem } from "./MemoryItem.js";
+import { DOMAIN_FILE_MAP, MemoryDomain } from "./domains.js";
+import { parseMemoryMarkdown } from "../markdown/parseMemory.js";
+import { appendMemoryItemsToMarkdown } from "../markdown/writeMemory.js";
+import { generateId } from "../utils/ids.js";
+import { now } from "../utils/time.js";
 
 export class MemoryService {
   private memoryIndex: Map<string, MemoryItem> = new Map();

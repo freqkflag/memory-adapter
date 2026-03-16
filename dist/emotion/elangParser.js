@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseELang = parseELang;
-const axisRegistry_1 = require("./axisRegistry");
-const time_1 = require("../utils/time");
+import { loadAxisRegistry } from "./axisRegistry";
+import { now } from "../utils/time";
 // ABNF-style grammar (documentation):
 // elang       = vector [";" trajectory]
 // vector      = 1*(axis)
@@ -10,13 +7,13 @@ const time_1 = require("../utils/time");
 // axis-name   = 1*(ALPHA / DIGIT / "_")
 // number      = ["-"] 1*DIGIT ["." 1*DIGIT]
 // trajectory  = "->" 1*(vector)
-function parseELang(input) {
+export function parseELang(input) {
     const trimmed = input.trim();
     if (!trimmed) {
         throw new Error("Empty E-Lang expression");
     }
     const [head, trajPart] = splitOnce(trimmed, "->");
-    const axisRegistry = (0, axisRegistry_1.loadAxisRegistry)();
+    const axisRegistry = loadAxisRegistry();
     const mainVector = parseVector(head.trim(), axisRegistry);
     mainVector.source = "user";
     if (trajPart) {
@@ -34,7 +31,7 @@ function parseELang(input) {
         }
     }
     if (!mainVector.timestamp) {
-        mainVector.timestamp = (0, time_1.now)();
+        mainVector.timestamp = now();
     }
     return mainVector;
 }
@@ -64,7 +61,7 @@ function parseVector(expr, axisRegistry) {
     }
     return {
         axes,
-        timestamp: (0, time_1.now)(),
+        timestamp: now(),
         source: "user"
     };
 }

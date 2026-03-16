@@ -1,20 +1,15 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.MemoryService = void 0;
-const fs_1 = require("fs");
-const domains_1 = require("./domains");
-const parseMemory_1 = require("../markdown/parseMemory");
-const writeMemory_1 = require("../markdown/writeMemory");
-const ids_1 = require("../utils/ids");
-const time_1 = require("../utils/time");
-class MemoryService {
-    constructor() {
-        this.memoryIndex = new Map();
-    }
+import { promises as fs } from "fs";
+import { DOMAIN_FILE_MAP } from "./domains";
+import { parseMemoryMarkdown } from "../markdown/parseMemory";
+import { appendMemoryItemsToMarkdown } from "../markdown/writeMemory";
+import { generateId } from "../utils/ids";
+import { now } from "../utils/time";
+export class MemoryService {
+    memoryIndex = new Map();
     async loadAll(createdBy) {
-        for (const [domain, path] of Object.entries(domains_1.DOMAIN_FILE_MAP)) {
+        for (const [domain, path] of Object.entries(DOMAIN_FILE_MAP)) {
             const content = await this.safeRead(path);
-            const parsed = (0, parseMemory_1.parseMemoryMarkdown)(content, domain, createdBy);
+            const parsed = parseMemoryMarkdown(content, domain, createdBy);
             for (const item of parsed.items) {
                 this.memoryIndex.set(item.id, item);
             }
@@ -27,10 +22,10 @@ class MemoryService {
         return this.memoryIndex.get(id);
     }
     async appendToDomain(domain, text, agentId) {
-        const path = domains_1.DOMAIN_FILE_MAP[domain];
+        const path = DOMAIN_FILE_MAP[domain];
         const existing = await this.safeRead(path);
         const item = {
-            id: (0, ids_1.generateId)("mem"),
+            id: generateId("mem"),
             text,
             domain,
             durability: "normal",
@@ -42,10 +37,10 @@ class MemoryService {
             createdBy: agentId,
             updatedBy: agentId,
             version: 1,
-            timestamp: (0, time_1.now)()
+            timestamp: now()
         };
-        const updated = (0, writeMemory_1.appendMemoryItemsToMarkdown)(existing, [item], domain);
-        await fs_1.promises.writeFile(path, updated, "utf8");
+        const updated = appendMemoryItemsToMarkdown(existing, [item], domain);
+        await fs.writeFile(path, updated, "utf8");
         this.memoryIndex.set(item.id, item);
         return item;
     }
@@ -54,7 +49,7 @@ class MemoryService {
     }
     async safeRead(path) {
         try {
-            return await fs_1.promises.readFile(path, "utf8");
+            return await fs.readFile(path, "utf8");
         }
         catch (err) {
             if (err && err.code === "ENOENT") {
@@ -64,4 +59,3 @@ class MemoryService {
         }
     }
 }
-exports.MemoryService = MemoryService;

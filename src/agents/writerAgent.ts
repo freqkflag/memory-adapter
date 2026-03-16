@@ -1,7 +1,7 @@
-import { MemoryService } from "../memory/MemoryService";
-import { CognitionCoordinator } from "../cognition/cognitionCoordinator";
-import { AgentRole } from "../planning/agentRoles";
-import { MemoryDomain } from "../memory/domains";
+import { MemoryService } from "../memory/MemoryService.js";
+import { CognitionCoordinator } from "../cognition/cognitionCoordinator.js";
+import { AgentRole } from "../planning/agentRoles.js";
+import { MemoryDomain } from "../memory/domains.js";
 
 export class WriterAgent {
   readonly id = "writer";

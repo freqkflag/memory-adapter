@@ -1,19 +1,16 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.createTools = createTools;
-const plannerAgent_1 = require("../agents/plannerAgent");
-const retrieverAgent_1 = require("../agents/retrieverAgent");
-const reflectionAgent_1 = require("../agents/reflectionAgent");
-const predictionAgent_1 = require("../agents/predictionAgent");
-const verificationAgent_1 = require("../agents/verificationAgent");
-const systemIntrospectionAgent_1 = require("../agents/systemIntrospectionAgent");
-function createTools(coordinator) {
-    const planner = new plannerAgent_1.PlannerAgent(coordinator);
-    const retriever = new retrieverAgent_1.RetrieverAgent(coordinator);
-    const reflection = new reflectionAgent_1.ReflectionAgent(coordinator);
-    const prediction = new predictionAgent_1.PredictionAgent(coordinator);
-    const verification = new verificationAgent_1.VerificationAgent(coordinator);
-    const introspection = new systemIntrospectionAgent_1.SystemIntrospectionAgent(coordinator);
+import { PlannerAgent } from "../agents/plannerAgent";
+import { RetrieverAgent } from "../agents/retrieverAgent";
+import { ReflectionAgent } from "../agents/reflectionAgent";
+import { PredictionAgent } from "../agents/predictionAgent";
+import { VerificationAgent } from "../agents/verificationAgent";
+import { SystemIntrospectionAgent } from "../agents/systemIntrospectionAgent";
+export function createTools(coordinator) {
+    const planner = new PlannerAgent(coordinator);
+    const retriever = new RetrieverAgent(coordinator);
+    const reflection = new ReflectionAgent(coordinator);
+    const prediction = new PredictionAgent(coordinator);
+    const verification = new VerificationAgent(coordinator);
+    const introspection = new SystemIntrospectionAgent(coordinator);
     return {
         async get_user_summary() {
             const agents = coordinator.listAgents();

@@ -1,17 +1,15 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.PredictionAgent = void 0;
-const predictionEngine_1 = require("../prediction/predictionEngine");
-class PredictionAgent {
+import { generatePredictions } from "../prediction/predictionEngine";
+export class PredictionAgent {
+    coordinator;
+    id = "prediction";
+    name = "Prediction Agent";
+    type = "predictionAgent";
     constructor(coordinator) {
         this.coordinator = coordinator;
-        this.id = "prediction";
-        this.name = "Prediction Agent";
-        this.type = "predictionAgent";
     }
     async predict() {
         const memories = this.coordinator.getAllMemories();
-        const predictions = (0, predictionEngine_1.generatePredictions)(memories);
+        const predictions = generatePredictions(memories);
         await this.coordinator.logOperation({
             agentId: this.id,
             action: "predict",
@@ -20,4 +18,3 @@ class PredictionAgent {
         return predictions;
     }
 }
-exports.PredictionAgent = PredictionAgent;

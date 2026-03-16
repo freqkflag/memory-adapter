@@ -1,4 +1,4 @@
-import { MemoryItem } from "../memory/MemoryItem";
+import { MemoryItem } from "../memory/MemoryItem.js";
 
 export function minePredictivePatterns(memories: MemoryItem[]): string[] {
   const patterns: string[] = [];

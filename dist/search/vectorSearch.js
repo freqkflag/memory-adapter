@@ -1,9 +1,6 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.vectorSearch = vectorSearch;
-const text_1 = require("../utils/text");
+import { normalizeText, tokenize } from "../utils/text";
 function embed(text) {
-    const tokens = (0, text_1.tokenize)(text);
+    const tokens = tokenize(text);
     const vec = [];
     for (const token of tokens) {
         let hash = 0;
@@ -30,11 +27,11 @@ function cosineSimilarity(a, b) {
         return 0;
     return dot / (Math.sqrt(na) * Math.sqrt(nb));
 }
-function vectorSearch(query, items, topK) {
-    const qVec = embed((0, text_1.normalizeText)(query));
+export function vectorSearch(query, items, topK) {
+    const qVec = embed(normalizeText(query));
     const results = [];
     for (const item of items) {
-        const score = cosineSimilarity(qVec, embed((0, text_1.normalizeText)(item.text)));
+        const score = cosineSimilarity(qVec, embed(normalizeText(item.text)));
         results.push({ item, score });
     }
     return results

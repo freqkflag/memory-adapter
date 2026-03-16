@@ -1,16 +1,20 @@
 {
-  "name": "personal-ai-os",
+  "name": "@freqkflag/ai-os",
   "version": "0.1.0",
-  "description": "Personal AI Operating System with persistent markdown memory, hybrid retrieval, reflection, prediction, and E-Lang emotional vectors.",
-  "main": "dist/index.js",
+  "description": "Personal AI Operating System SDK with markdown memory, hybrid retrieval, reflection, prediction, E-Lang vectors, multi-agent cognition, and MCP server runtime.",
+  "type": "module",
+  "main": "dist/sdk/index.js",
+  "exports": {
+    ".": "./dist/sdk/index.js",
+    "./mcp": "./dist/mcp/server.js"
+  },
+  "bin": {
+    "ai-os": "./dist/cli/start.js"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "start": "ts-node src/mcp/server.ts",
-    "validate": "ts-node src/scripts/validate.ts",
-    "diagnostics": "ts-node src/scripts/systemDiagnostics.ts",
-    "test": "vitest run",
-    "mcp-stdio": "ts-node src/mcp/stdioServer.ts",
-    "test:legacy": "ts-node src/scripts/test.ts"
+    "start": "node dist/mcp/server.js",
+    "test": "vitest run"
   },
   "keywords": [
     "personal-ai",
@@ -18,17 +22,19 @@
     "reflection",
     "prediction",
     "elang",
-    "mcp"
+    "mcp",
+    "sdk"
   ],
   "author": "",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "zod": "^4.3.6"
+  },
   "devDependencies": {
-    "ts-node": "^10.9.2",
     "typescript": "^5.7.0",
     "@types/node": "^22.10.2",
-    "vitest": "^2.0.5",
-    "zod": "^4.3.6"
+    "vitest": "^2.0.5"
   },
   "engines": {
     "node": ">=20.0.0"

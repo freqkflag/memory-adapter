@@ -1,10 +1,10 @@
-import { MemoryItem } from "../memory/MemoryItem";
-import { vectorSearch } from "./vectorSearch";
-import { keywordSearch } from "./keywordSearch";
-import { MemoryGraph } from "../graph/memoryGraph";
-import { traverseGraph } from "../graph/graphTraversal";
-import { DEFAULT_PROFILE } from "../ranking/retrievalProfiles";
-import { rankAndFilter, RankedResult } from "../ranking/rankAndFilter";
+import { MemoryItem } from "../memory/MemoryItem.js";
+import { vectorSearch } from "./vectorSearch.js";
+import { keywordSearch } from "./keywordSearch.js";
+import { MemoryGraph } from "../graph/memoryGraph.js";
+import { traverseGraph } from "../graph/graphTraversal.js";
+import { DEFAULT_PROFILE } from "../ranking/retrievalProfiles.js";
+import { rankAndFilter, RankedResult } from "../ranking/rankAndFilter.js";
 
 export interface HybridRetrievalConfig {
   topKVector: number;

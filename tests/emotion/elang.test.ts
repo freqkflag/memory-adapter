@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { parseELang } from "../../src/emotion/elangParser";
-import { loadAxisRegistry } from "../../src/emotion/axisRegistry";
+import { parseELang } from "../../src/emotion/elangParser.js";
+import { loadAxisRegistry } from "../../src/emotion/axisRegistry.js";
 
 describe("E-Lang emotional vectors", () => {
   it("parses syntax into numeric vectors and trajectory", () => {

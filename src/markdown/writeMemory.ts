@@ -1,4 +1,4 @@
-import { MemoryItem } from "../memory/MemoryItem";
+import { MemoryItem } from "../memory/MemoryItem.js";
 
 export function appendMemoryItemsToMarkdown(
   existing: string,

@@ -1,6 +1,6 @@
-import { CognitionCoordinator } from "../cognition/cognitionCoordinator";
-import { AgentRole } from "../planning/agentRoles";
-import { verifyInsight } from "../reflection/verifyInsight";
+import { CognitionCoordinator } from "../cognition/cognitionCoordinator.js";
+import { AgentRole } from "../planning/agentRoles.js";
+import { verifyInsight } from "../reflection/verifyInsight.js";
 
 export class VerificationAgent {
   readonly id = "verification";

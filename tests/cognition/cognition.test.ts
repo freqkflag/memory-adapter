@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { OperationLog } from "../../src/cognition/operationLog";
-import { resolveDuplicateWrites } from "../../src/cognition/conflictResolver";
-import { MemoryItem } from "../../src/memory/MemoryItem";
+import { OperationLog } from "../../src/cognition/operationLog.js";
+import { resolveDuplicateWrites } from "../../src/cognition/conflictResolver.js";
+import { MemoryItem } from "../../src/memory/MemoryItem.js";
 
 describe("Shared Cognition", () => {
   it("records operations to the log", async () => {

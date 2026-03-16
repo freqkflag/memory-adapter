@@ -1,4 +1,4 @@
-import { MemoryItem } from "../memory/MemoryItem";
+import { MemoryItem } from "../memory/MemoryItem.js";
 
 export type EdgeType = "related_to" | "part_of" | "inspired_by" | "same_project" | "same_topic";
 

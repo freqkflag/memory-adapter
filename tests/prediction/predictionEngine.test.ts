@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { generatePredictions, isPredictionActive } from "../../src/prediction/predictionEngine";
-import { MemoryItem } from "../../src/memory/MemoryItem";
+import { generatePredictions, isPredictionActive } from "../../src/prediction/predictionEngine.js";
+import { MemoryItem } from "../../src/memory/MemoryItem.js";
 
 describe("Prediction Engine", () => {
   const base: Omit<MemoryItem, "id"> = {

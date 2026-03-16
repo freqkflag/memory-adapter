@@ -1,7 +1,7 @@
-import { MarkdownSection, parseSections } from "./sectionParser";
-import { MemoryItem } from "../memory/MemoryItem";
-import { generateId } from "../utils/ids";
-import { now } from "../utils/time";
+import { MarkdownSection, parseSections } from "./sectionParser.js";
+import { MemoryItem } from "../memory/MemoryItem.js";
+import { generateId } from "../utils/ids.js";
+import { now } from "../utils/time.js";
 
 export interface ParsedMemoryFile {
   sections: MarkdownSection[];

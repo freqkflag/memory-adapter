@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
-import { generateId } from "../utils/ids";
-import { now } from "../utils/time";
+import { generateId } from "../utils/ids.js";
+import { now } from "../utils/time.js";
 
 export interface Operation {
   id: string;

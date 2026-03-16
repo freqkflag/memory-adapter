@@ -1,9 +1,9 @@
-import { MemoryService } from "../memory/MemoryService";
-import { AgentRegistry } from "./agentRegistry";
-import { OperationLog, Operation } from "./operationLog";
-import { ChangeBroadcast } from "./changeBroadcast";
-import { MemoryGraph } from "../graph/memoryGraph";
-import { hybridRetrieve } from "../search/hybridSearch";
+import { MemoryService } from "../memory/MemoryService.js";
+import { AgentRegistry } from "./agentRegistry.js";
+import { OperationLog, Operation } from "./operationLog.js";
+import { ChangeBroadcast } from "./changeBroadcast.js";
+import { MemoryGraph } from "../graph/memoryGraph.js";
+import { hybridRetrieve } from "../search/hybridSearch.js";
 
 export class CognitionCoordinator {
   constructor(

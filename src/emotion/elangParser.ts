@@ -1,6 +1,6 @@
-import { ELangVector } from "./elangVectorModel";
-import { loadAxisRegistry } from "./axisRegistry";
-import { now } from "../utils/time";
+import { ELangVector } from "./elangVectorModel.js";
+import { loadAxisRegistry } from "./axisRegistry.js";
+import { now } from "../utils/time.js";
 
 // ABNF-style grammar (documentation):
 // elang       = vector [";" trajectory]

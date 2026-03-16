@@ -1,9 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.CognitionCoordinator = void 0;
-const memoryGraph_1 = require("../graph/memoryGraph");
-const hybridSearch_1 = require("../search/hybridSearch");
-class CognitionCoordinator {
+import { MemoryGraph } from "../graph/memoryGraph";
+import { hybridRetrieve } from "../search/hybridSearch";
+export class CognitionCoordinator {
+    memory;
+    agents;
+    opLog;
+    broadcaster;
     constructor(memory, agents, opLog, broadcaster) {
         this.memory = memory;
         this.agents = agents;
@@ -17,8 +18,8 @@ class CognitionCoordinator {
     }
     async retrieveContext(query) {
         const memories = this.memory.getAll();
-        const graph = memoryGraph_1.MemoryGraph.buildFromMemories(memories);
-        return (0, hybridSearch_1.hybridRetrieve)(query, memories, graph);
+        const graph = MemoryGraph.buildFromMemories(memories);
+        return hybridRetrieve(query, memories, graph);
     }
     listAgents() {
         return this.agents.list();
@@ -30,4 +31,3 @@ class CognitionCoordinator {
         return this.opLog;
     }
 }
-exports.CognitionCoordinator = CognitionCoordinator;

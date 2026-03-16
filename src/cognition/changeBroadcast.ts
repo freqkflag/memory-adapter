@@ -1,4 +1,4 @@
-import { Operation } from "./operationLog";
+import { Operation } from "./operationLog.js";
 
 export type ChangeListener = (op: Operation) => void;
 

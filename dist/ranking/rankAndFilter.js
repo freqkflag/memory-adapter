@@ -1,8 +1,5 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.rankAndFilter = rankAndFilter;
-const time_1 = require("../utils/time");
-function rankAndFilter(vectorResults, keywordResults, graphRelevance, profile, limit) {
+import { now } from "../utils/time";
+export function rankAndFilter(vectorResults, keywordResults, graphRelevance, profile, limit) {
     const keywordMap = new Map();
     for (const kr of keywordResults) {
         keywordMap.set(kr.item.id, kr.overlap);
@@ -17,7 +14,7 @@ function rankAndFilter(vectorResults, keywordResults, graphRelevance, profile, l
     ]);
     const results = [];
     const seenTexts = new Set();
-    const nowTs = (0, time_1.now)();
+    const nowTs = now();
     for (const id of combinedIds) {
         const semantic_similarity = (vectorMap.get(id) ?? 0) * profile.vectorWeight;
         const keyword_overlap = (keywordMap.get(id) ?? 0) * profile.keywordWeight;

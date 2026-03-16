@@ -1,17 +1,15 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ReflectionAgent = void 0;
-const reflectionEngine_1 = require("../reflection/reflectionEngine");
-class ReflectionAgent {
+import { generateReflections } from "../reflection/reflectionEngine";
+export class ReflectionAgent {
+    coordinator;
+    id = "reflection";
+    name = "Reflection Agent";
+    type = "reflectionAgent";
     constructor(coordinator) {
         this.coordinator = coordinator;
-        this.id = "reflection";
-        this.name = "Reflection Agent";
-        this.type = "reflectionAgent";
     }
     async reflect() {
         const memories = this.coordinator.getAllMemories();
-        const { insights, counterfactuals } = (0, reflectionEngine_1.generateReflections)(memories);
+        const { insights, counterfactuals } = generateReflections(memories);
         await this.coordinator.logOperation({
             agentId: this.id,
             action: "reflect",
@@ -20,4 +18,3 @@ class ReflectionAgent {
         return { insights, counterfactuals };
     }
 }
-exports.ReflectionAgent = ReflectionAgent;

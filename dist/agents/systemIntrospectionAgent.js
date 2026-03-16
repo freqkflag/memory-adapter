@@ -1,46 +1,11 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || (function () {
-    var ownKeys = function(o) {
-        ownKeys = Object.getOwnPropertyNames || function (o) {
-            var ar = [];
-            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
-            return ar;
-        };
-        return ownKeys(o);
-    };
-    return function (mod) {
-        if (mod && mod.__esModule) return mod;
-        var result = {};
-        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
-        __setModuleDefault(result, mod);
-        return result;
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SystemIntrospectionAgent = void 0;
-const text_1 = require("../utils/text");
-class SystemIntrospectionAgent {
+import { normalizeText } from "../utils/text";
+export class SystemIntrospectionAgent {
+    coordinator;
+    id = "system-introspection";
+    name = "System Introspection Agent";
+    type = "systemIntrospectionAgent";
     constructor(coordinator) {
         this.coordinator = coordinator;
-        this.id = "system-introspection";
-        this.name = "System Introspection Agent";
-        this.type = "systemIntrospectionAgent";
     }
     async analyze() {
         const memories = this.coordinator.getAllMemories();
@@ -57,7 +22,7 @@ class SystemIntrospectionAgent {
     }
     async readOperations(opLog) {
         // Re-open the log file to compute metrics; keep OperationLog write-only for normal flow.
-        const fs = await Promise.resolve().then(() => __importStar(require("fs/promises")));
+        const fs = await import("fs/promises");
         const path = "memory/operations.log";
         let text = "";
         try {
@@ -116,7 +81,7 @@ class SystemIntrospectionAgent {
         const normalizedTexts = new Map();
         let clutterCandidates = 0;
         for (const m of memories) {
-            const norm = (0, text_1.normalizeText)(m.text);
+            const norm = normalizeText(m.text);
             normalizedTexts.set(norm, (normalizedTexts.get(norm) ?? 0) + 1);
             if (m.strength < 0.3 && m.importance < 0.3) {
                 clutterCandidates += 1;
@@ -154,4 +119,3 @@ class SystemIntrospectionAgent {
         return alerts;
     }
 }
-exports.SystemIntrospectionAgent = SystemIntrospectionAgent;

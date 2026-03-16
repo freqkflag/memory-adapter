@@ -1,4 +1,4 @@
-import { MemoryItem } from "../memory/MemoryItem";
+import { MemoryItem } from "../memory/MemoryItem.js";
 
 export function groupEpisodesByDomain(episodes: MemoryItem[]): Map<string, MemoryItem[]> {
   const map = new Map<string, MemoryItem[]>();

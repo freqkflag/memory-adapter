@@ -1,8 +1,8 @@
-import { CognitionCoordinator } from "../cognition/cognitionCoordinator";
-import { AgentRole } from "../planning/agentRoles";
-import { Operation } from "../cognition/operationLog";
-import { MemoryItem } from "../memory/MemoryItem";
-import { normalizeText } from "../utils/text";
+import { CognitionCoordinator } from "../cognition/cognitionCoordinator.js";
+import { AgentRole } from "../planning/agentRoles.js";
+import { Operation } from "../cognition/operationLog.js";
+import { MemoryItem } from "../memory/MemoryItem.js";
+import { normalizeText } from "../utils/text.js";
 
 export interface SystemMetrics {
   memoryCount: number;

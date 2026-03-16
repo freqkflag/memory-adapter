@@ -1,6 +1,6 @@
-import { CognitionCoordinator } from "../cognition/cognitionCoordinator";
-import { decomposeGoal, Task } from "../planning/taskPlanner";
-import { AgentRole } from "../planning/agentRoles";
+import { CognitionCoordinator } from "../cognition/cognitionCoordinator.js";
+import { decomposeGoal, Task } from "../planning/taskPlanner.js";
+import { AgentRole } from "../planning/agentRoles.js";
 
 export class PlannerAgent {
   readonly id = "planner";

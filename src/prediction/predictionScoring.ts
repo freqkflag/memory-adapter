@@ -1,4 +1,4 @@
-import { MemoryItem } from "../memory/MemoryItem";
+import { MemoryItem } from "../memory/MemoryItem.js";
 
 export function scorePrediction(text: string, memories: MemoryItem[]): number {
   const lc = text.toLowerCase();

@@ -1,5 +1,5 @@
-import { CognitionCoordinator } from "../cognition/cognitionCoordinator";
-import { AgentRole } from "../planning/agentRoles";
+import { CognitionCoordinator } from "../cognition/cognitionCoordinator.js";
+import { AgentRole } from "../planning/agentRoles.js";
 
 export class RetrieverAgent {
   readonly id = "retriever";

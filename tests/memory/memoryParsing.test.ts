@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { parseSections } from "../../src/markdown/sectionParser";
-import { parseMemoryMarkdown } from "../../src/markdown/parseMemory";
+import { parseSections } from "../../src/markdown/sectionParser.js";
+import { parseMemoryMarkdown } from "../../src/markdown/parseMemory.js";
 
 describe("Memory Parsing", () => {
   const md = `

@@ -1,6 +1,6 @@
-import { CognitionCoordinator } from "../cognition/cognitionCoordinator";
-import { AgentRole } from "../planning/agentRoles";
-import { generatePredictions } from "../prediction/predictionEngine";
+import { CognitionCoordinator } from "../cognition/cognitionCoordinator.js";
+import { AgentRole } from "../planning/agentRoles.js";
+import { generatePredictions } from "../prediction/predictionEngine.js";
 
 export class PredictionAgent {
   readonly id = "prediction";

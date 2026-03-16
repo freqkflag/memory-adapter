@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { generateReflections } from "../../src/reflection/reflectionEngine";
-import { MemoryItem } from "../../src/memory/MemoryItem";
+import { generateReflections } from "../../src/reflection/reflectionEngine.js";
+import { MemoryItem } from "../../src/memory/MemoryItem.js";
 
 describe("Reflection Engine", () => {
   const base: Omit<MemoryItem, "id"> = {

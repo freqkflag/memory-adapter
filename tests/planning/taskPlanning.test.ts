@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { decomposeGoal } from "../../src/planning/taskPlanner";
+import { decomposeGoal } from "../../src/planning/taskPlanner.js";
 
 describe("Task Planning", () => {
   it("decomposes goals across agent roles", () => {

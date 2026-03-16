@@ -1,17 +1,15 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.VerificationAgent = void 0;
-const verifyInsight_1 = require("../reflection/verifyInsight");
-class VerificationAgent {
+import { verifyInsight } from "../reflection/verifyInsight";
+export class VerificationAgent {
+    coordinator;
+    id = "verification";
+    name = "Verification Agent";
+    type = "verificationAgent";
     constructor(coordinator) {
         this.coordinator = coordinator;
-        this.id = "verification";
-        this.name = "Verification Agent";
-        this.type = "verificationAgent";
     }
     async testInsight(text) {
         const memories = this.coordinator.getAllMemories();
-        const insight = (0, verifyInsight_1.verifyInsight)(text, memories);
+        const insight = verifyInsight(text, memories);
         await this.coordinator.logOperation({
             agentId: this.id,
             action: "test_insight",
@@ -20,4 +18,3 @@ class VerificationAgent {
         return insight;
     }
 }
-exports.VerificationAgent = VerificationAgent;

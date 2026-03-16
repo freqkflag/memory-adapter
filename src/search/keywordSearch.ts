@@ -1,5 +1,5 @@
-import { MemoryItem } from "../memory/MemoryItem";
-import { keywordOverlap, tokenize } from "../utils/text";
+import { MemoryItem } from "../memory/MemoryItem.js";
+import { keywordOverlap, tokenize } from "../utils/text.js";
 
 export interface KeywordSearchResult {
   item: MemoryItem;
