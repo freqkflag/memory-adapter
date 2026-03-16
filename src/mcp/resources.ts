@@ -1,4 +1,4 @@
-import { promises as fs } from "fs";
+import { promises as fs } from "node:fs";
 
 const PATHS: Record<string, string> = {
   "user://identity": "memory/identity_core.md",
@@ -17,6 +17,16 @@ export async function getResource(uri: string): Promise<string> {
   if (!path) {
     throw new Error(`Unknown resource URI: ${uri}`);
   }
-  return fs.readFile(path, "utf8");
+  try {
+    return await fs.readFile(path, "utf8");
+  } catch (err: any) {
+    if (err && err.code === "ENOENT" && uri === "user://agents") {
+      // Ensure operations log exists for agents resource
+      await fs.mkdir("memory", { recursive: true });
+      await fs.writeFile(path, "", "utf8");
+      return "";
+    }
+    throw err;
+  }
 }
 
