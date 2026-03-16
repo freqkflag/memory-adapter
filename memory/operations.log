@@ -1,2 +1,4 @@
 
 {"agentId":"system-introspection","action":"system_introspection","payload":{"memoryCount":1,"memoryByDomain":{"identity":1},"approximateMemoryGrowth24h":1,"retrievalCount":0,"averageRetrievedItems":0,"predictionCount":0,"averagePredictionConfidence":0,"clutterRatio":0},"id":"op_mmt47dul_hcl9qljp","timestamp":1773661403613}
+{"agentId":"test-agent","action":"test_action","payload":{"x":1},"id":"op_mmt4emav_73y9x1nr","timestamp":1773661741159}
+{"agentId":"test-agent","action":"test_action","payload":{"x":1},"id":"op_mmt4f50r_hyf1ccgp","timestamp":1773661765419}

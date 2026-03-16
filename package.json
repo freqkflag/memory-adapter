@@ -7,7 +7,9 @@
     "build": "tsc -p tsconfig.json",
     "start": "ts-node src/mcp/server.ts",
     "validate": "ts-node src/scripts/validate.ts",
-    "test": "ts-node src/scripts/test.ts"
+    "diagnostics": "ts-node src/scripts/systemDiagnostics.ts",
+    "test": "vitest run",
+    "test:legacy": "ts-node src/scripts/test.ts"
   },
   "keywords": [
     "personal-ai",
@@ -23,7 +25,8 @@
   "devDependencies": {
     "ts-node": "^10.9.2",
     "typescript": "^5.7.0",
-    "@types/node": "^22.10.2"
+    "@types/node": "^22.10.2",
+    "vitest": "^2.0.5"
   },
   "engines": {
     "node": ">=20.0.0"
