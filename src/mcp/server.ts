@@ -5,6 +5,15 @@ import { createAIOS } from "../sdk/createAIOS.js";
 import { getResource } from "./resources.js";
 import { createTools } from "./tools.js";
 
+function wrapResult(result: any) {
+  return [
+    {
+      type: "text" as const,
+      text: JSON.stringify(result)
+    }
+  ];
+}
+
 export async function runMcpServer(): Promise<void> {
   const server = new McpServer(
     {
@@ -31,7 +40,7 @@ export async function runMcpServer(): Promise<void> {
     },
     async () => {
       const result = await tools.get_user_summary();
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: wrapResult(result) };
     }
   );
 
@@ -43,7 +52,7 @@ export async function runMcpServer(): Promise<void> {
     },
     async ({ query }) => {
       const result = await tools.get_relevant_context({ query });
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: wrapResult(result) };
     }
   );
 
@@ -51,11 +60,13 @@ export async function runMcpServer(): Promise<void> {
     "generate_reflection",
     {
       description: "Generate insights and counterfactuals from current memory",
-      inputSchema: z.object({})
+      inputSchema: z.object({
+        mode: z.enum(["identityConsolidation", "problemSolving", "timelineReview"]).optional()
+      })
     },
-    async () => {
-      const result = await tools.generate_reflection();
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    async ({ mode }) => {
+      const result = await tools.generate_reflection(mode ? { mode } : {});
+      return { content: wrapResult(result) };
     }
   );
 
@@ -67,7 +78,34 @@ export async function runMcpServer(): Promise<void> {
     },
     async () => {
       const result = await tools.generate_predictions();
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: wrapResult(result) };
+    }
+  );
+
+  server.registerTool(
+    "record_prediction_outcome",
+    {
+      description: "Record whether a prediction was correct or incorrect",
+      inputSchema: z.object({
+        predId: z.string(),
+        correct: z.boolean()
+      })
+    },
+    async ({ predId, correct }) => {
+      const result = await tools.record_prediction_outcome({ predId, correct });
+      return { content: wrapResult(result) };
+    }
+  );
+
+  server.registerTool(
+    "self_evaluate",
+    {
+      description: "Return a unified self-evaluation health snapshot",
+      inputSchema: z.object({})
+    },
+    async () => {
+      const result = await tools.self_evaluate();
+      return { content: wrapResult(result) };
     }
   );
 
@@ -83,7 +121,7 @@ export async function runMcpServer(): Promise<void> {
     },
     async ({ id, name, type }) => {
       const result = await tools.register_agent({ id, name, type });
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: wrapResult(result) };
     }
   );
 
@@ -95,7 +133,7 @@ export async function runMcpServer(): Promise<void> {
     },
     async ({ text }) => {
       const result = await tools.test_insight({ text });
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: wrapResult(result) };
     }
   );
 
@@ -107,7 +145,7 @@ export async function runMcpServer(): Promise<void> {
     },
     async ({ goal }) => {
       const result = await tools.create_task({ goal });
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: wrapResult(result) };
     }
   );
 
@@ -119,7 +157,7 @@ export async function runMcpServer(): Promise<void> {
     },
     async () => {
       const result = await tools.agent_status();
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: wrapResult(result) };
     }
   );
 
@@ -131,7 +169,7 @@ export async function runMcpServer(): Promise<void> {
     },
     async () => {
       const result = await tools.system_report();
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: wrapResult(result) };
     }
   );
 
@@ -150,7 +188,7 @@ export async function runMcpServer(): Promise<void> {
     },
     async ({ text, domain, source }) => {
       const result = await tools.ingest_document_summary({ text, domain, source });
-      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+      return { content: wrapResult(result) };
     }
   );
 
