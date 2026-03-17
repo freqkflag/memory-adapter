@@ -7,6 +7,7 @@ import { VerificationAgent } from "../agents/verificationAgent.js";
 import { SystemIntrospectionAgent } from "../agents/systemIntrospectionAgent.js";
 import { WriterAgent } from "../agents/writerAgent.js";
 import type { MemoryDomain } from "../memory/domains.js";
+import { recordPredictionOutcome } from "../core/memory/predictionOutcomes.js";
 
 export function createTools(coordinator: CognitionCoordinator) {
   const planner = new PlannerAgent(coordinator);
@@ -39,6 +40,10 @@ export function createTools(coordinator: CognitionCoordinator) {
     },
     async generate_predictions() {
       return prediction.predict();
+    },
+    async record_prediction_outcome(input: { predId: string; correct: boolean }) {
+      await recordPredictionOutcome(input.predId, input.correct);
+      return { ok: true };
     },
     async register_agent(input: { id: string; name: string; type: string }) {
       await coordinator.logOperation({

@@ -5,6 +5,7 @@ import { PredictionAgent } from "../agents/predictionAgent.js";
 import { VerificationAgent } from "../agents/verificationAgent.js";
 import { SystemIntrospectionAgent } from "../agents/systemIntrospectionAgent.js";
 import { WriterAgent } from "../agents/writerAgent.js";
+import { recordPredictionOutcome } from "../core/memory/predictionOutcomes.js";
 export function createTools(coordinator) {
     const planner = new PlannerAgent(coordinator);
     const retriever = new RetrieverAgent(coordinator);
@@ -31,6 +32,10 @@ export function createTools(coordinator) {
         },
         async generate_predictions() {
             return prediction.predict();
+        },
+        async record_prediction_outcome(input) {
+            await recordPredictionOutcome(input.predId, input.correct);
+            return { ok: true };
         },
         async register_agent(input) {
             await coordinator.logOperation({

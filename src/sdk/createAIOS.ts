@@ -12,6 +12,7 @@ import { OperationLog } from "../cognition/operationLog.js";
 import { ChangeBroadcast } from "../cognition/changeBroadcast.js";
 import { CognitionCoordinator } from "../cognition/cognitionCoordinator.js";
 import { PlannerAgent } from "../agents/plannerAgent.js";
+import { TaskMemory } from "../core/cognition/taskMemory.js";
 
 export interface AIOS {
   memory: typeof memory;
@@ -40,7 +41,8 @@ export async function createAIOS(): Promise<AIOS> {
   const agents = new AgentRegistry();
   const opLog = new OperationLog();
   const broadcaster = new ChangeBroadcast();
-  const coordinator = new CognitionCoordinator(memoryService, db, agents, opLog, broadcaster);
+  const taskMemory = new TaskMemory();
+  const coordinator = new CognitionCoordinator(memoryService, db, agents, opLog, broadcaster, taskMemory);
   const plannerAgent = new PlannerAgent(coordinator);
 
   return {
