@@ -8,6 +8,7 @@ import { SystemIntrospectionAgent } from "../agents/systemIntrospectionAgent.js"
 import { WriterAgent } from "../agents/writerAgent.js";
 import type { MemoryDomain } from "../memory/domains.js";
 import { recordPredictionOutcome } from "../core/memory/predictionOutcomes.js";
+import { computeHealthSnapshot } from "../core/analytics/selfEvaluation.js";
 
 export function createTools(coordinator: CognitionCoordinator) {
   const planner = new PlannerAgent(coordinator);
@@ -65,6 +66,10 @@ export function createTools(coordinator: CognitionCoordinator) {
     },
     async system_report() {
       return introspection.analyze();
+    },
+    async self_evaluate() {
+      const snapshot = await computeHealthSnapshot(coordinator);
+      return snapshot;
     },
     async ingest_document_summary(input: { text: string; domain?: string; source?: string }) {
       const allowedDomains: MemoryDomain[] = [

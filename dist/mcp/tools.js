@@ -6,6 +6,7 @@ import { VerificationAgent } from "../agents/verificationAgent.js";
 import { SystemIntrospectionAgent } from "../agents/systemIntrospectionAgent.js";
 import { WriterAgent } from "../agents/writerAgent.js";
 import { recordPredictionOutcome } from "../core/memory/predictionOutcomes.js";
+import { computeHealthSnapshot } from "../core/analytics/selfEvaluation.js";
 export function createTools(coordinator) {
     const planner = new PlannerAgent(coordinator);
     const retriever = new RetrieverAgent(coordinator);
@@ -57,6 +58,10 @@ export function createTools(coordinator) {
         },
         async system_report() {
             return introspection.analyze();
+        },
+        async self_evaluate() {
+            const snapshot = await computeHealthSnapshot(coordinator);
+            return snapshot;
         },
         async ingest_document_summary(input) {
             const allowedDomains = [
