@@ -8,4 +8,5 @@ export * from "./memoryDb.js";
 export * from "./memoryStats.js";
 export * from "./temporalAnomalyDetector.js";
 export * from "./patternCatalog.js";
+export * from "./consolidationEngine.js";
 
