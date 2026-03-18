@@ -1,0 +1,2 @@
+# Keep local tooling output out of git status/noise.
+node_modules/.vite/vitest/results.json
