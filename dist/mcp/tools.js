@@ -8,6 +8,7 @@ import { SystemIntrospectionAgent } from "../agents/systemIntrospectionAgent.js"
 import { WriterAgent } from "../agents/writerAgent.js";
 import { recordPredictionOutcome } from "../core/memory/predictionOutcomes.js";
 import { computeHealthSnapshot } from "../core/analytics/selfEvaluation.js";
+import { goalMemory } from "../core/cognition/goalMemory.js";
 export const TOOL_DEFINITIONS = [
     {
         name: "get_user_summary",
@@ -25,6 +26,26 @@ export const TOOL_DEFINITIONS = [
         }
     },
     {
+        name: "adaptive_plan",
+        description: "Execute a goal with adaptive planning, evaluation, and re-planning",
+        capabilities: ["planning", "orchestration", "analysis"],
+        domains: ["identity", "timeline", "projects", "emotion"],
+        inputSchema: z.object({
+            goal: z.string()
+        }),
+        async handler(coordinator, args) {
+            const { goal } = args;
+            const planner = new PlannerAgent(coordinator);
+            const toolMap = {};
+            for (const def of TOOL_DEFINITIONS) {
+                if (def.name === "adaptive_plan")
+                    continue;
+                toolMap[def.name] = (a) => def.handler(coordinator, a ?? {});
+            }
+            return planner.adaptivePlan(goal, toolMap);
+        }
+    },
+    {
         name: "get_relevant_context",
         description: "Run hybrid retrieval for a natural-language query",
         capabilities: ["retrieval"],
@@ -35,6 +56,64 @@ export const TOOL_DEFINITIONS = [
             const retriever = new RetrieverAgent(coordinator);
             const results = await retriever.retrieve(query);
             return results.map((r) => ({ id: r.item.id, text: r.item.text, score: r.score }));
+        }
+    },
+    {
+        name: "create_goal",
+        description: "Create or reuse a long-running goal",
+        capabilities: ["planning"],
+        domains: ["identity", "timeline", "projects", "emotion"],
+        inputSchema: z.object({ goal: z.string() }),
+        async handler(_coordinator, args) {
+            const { goal } = args;
+            const existing = await goalMemory.findByText(goal);
+            if (existing)
+                return existing;
+            const created = await goalMemory.add({ id: `goal-${Date.now()}`, goal });
+            return created;
+        }
+    },
+    {
+        name: "resume_goal",
+        description: "Resume an existing long-running goal using adaptive planning",
+        capabilities: ["planning", "orchestration"],
+        domains: ["identity", "timeline", "projects", "emotion"],
+        inputSchema: z.object({ goalId: z.string() }),
+        async handler(coordinator, args) {
+            const { goalId } = args;
+            const planner = new PlannerAgent(coordinator);
+            const toolMap = {};
+            for (const def of TOOL_DEFINITIONS) {
+                if (def.name === "adaptive_plan" || def.name === "resume_goal")
+                    continue;
+                toolMap[def.name] = (a) => def.handler(coordinator, a ?? {});
+            }
+            return planner.resumeGoal(goalId, toolMap);
+        }
+    },
+    {
+        name: "list_goals",
+        description: "List all known long-running goals",
+        capabilities: ["introspection"],
+        domains: ["projects", "identity", "timeline", "emotion"],
+        inputSchema: z.object({}),
+        async handler() {
+            return goalMemory.listAll();
+        }
+    },
+    {
+        name: "complete_goal",
+        description: "Mark an existing goal as completed",
+        capabilities: ["planning"],
+        domains: ["projects", "identity", "timeline", "emotion"],
+        inputSchema: z.object({ goalId: z.string() }),
+        async handler(_coordinator, args) {
+            const { goalId } = args;
+            const updated = await goalMemory.markComplete(goalId);
+            if (!updated) {
+                return { ok: false, error: "Goal not found" };
+            }
+            return updated;
         }
     },
     {
@@ -60,6 +139,24 @@ export const TOOL_DEFINITIONS = [
         async handler(coordinator) {
             const prediction = new PredictionAgent(coordinator);
             return prediction.predict();
+        }
+    },
+    {
+        name: "auto_plan",
+        description: "Dynamically generate and execute a multi-step plan for a goal",
+        capabilities: ["planning", "orchestration"],
+        domains: ["identity", "timeline", "projects", "emotion"],
+        inputSchema: z.object({ goal: z.string() }),
+        async handler(coordinator, args) {
+            const { goal } = args;
+            const planner = new PlannerAgent(coordinator);
+            const toolMap = {};
+            for (const def of TOOL_DEFINITIONS) {
+                if (def.name === "auto_plan")
+                    continue;
+                toolMap[def.name] = (a) => def.handler(coordinator, a ?? {});
+            }
+            return planner.autoPlan(goal, toolMap);
         }
     },
     {

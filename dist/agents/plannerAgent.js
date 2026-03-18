@@ -1,5 +1,8 @@
 import { decomposeGoal } from "../planning/taskPlanner.js";
 import { now } from "../utils/time.js";
+import { generatePlan, executePlan } from "../core/planning/dynamicPlanner.js";
+import { runAdaptivePlan } from "../core/planning/adaptivePlanner.js";
+import { goalMemory } from "../core/cognition/goalMemory.js";
 export class PlannerAgent {
     coordinator;
     id = "planner";
@@ -30,5 +33,43 @@ export class PlannerAgent {
             domain: "projects"
         });
         return task;
+    }
+    async autoPlan(goal, tools) {
+        const plan = generatePlan(goal);
+        const executionResults = await executePlan(plan, tools);
+        await this.coordinator.logOperation({
+            agentId: this.id,
+            action: "auto_plan",
+            payload: { goal, plan, executionResults }
+        });
+        return { plan, executionResults };
+    }
+    async adaptivePlan(goal, tools) {
+        const existing = await goalMemory.findByText(goal);
+        const goalId = existing?.id ?? `goal-${Date.now()}`;
+        const storedGoal = existing ?? (await goalMemory.add({ id: goalId, goal }));
+        const result = await runAdaptivePlan(goal, tools, 3, goalMemory, storedGoal.id);
+        await this.coordinator.logOperation({
+            agentId: this.id,
+            action: "adaptive_plan",
+            payload: { goal: storedGoal.goal, goalId: storedGoal.id, iterations: result.iterations.length }
+        });
+        return result;
+    }
+    async resumeGoal(goalId, tools) {
+        const stored = await goalMemory.get(goalId);
+        if (!stored) {
+            return { ok: false, error: "Goal not found" };
+        }
+        if (stored.status === "completed" || stored.status === "failed") {
+            return { ok: false, error: `Goal is already ${stored.status}` };
+        }
+        const result = await runAdaptivePlan(stored.goal, tools, 3, goalMemory, stored.id);
+        await this.coordinator.logOperation({
+            agentId: this.id,
+            action: "resume_goal",
+            payload: { goalId: stored.id, iterations: result.iterations.length }
+        });
+        return result;
     }
 }
