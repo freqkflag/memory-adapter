@@ -45,6 +45,10 @@ export class GoalMemory {
         await this.load();
         return Array.from(this.goals.values()).filter((g) => g.status === "active");
     }
+    async getRunnable() {
+        await this.load();
+        return Array.from(this.goals.values()).filter((g) => g.status === "active" || g.status === "paused");
+    }
     async get(goalId) {
         await this.load();
         return this.goals.get(goalId);

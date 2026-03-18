@@ -9,11 +9,13 @@
     "./mcp": "./dist/mcp/server.js"
   },
   "bin": {
-    "ai-os": "./dist/cli/start.js"
+    "ai-os": "./dist/cli/start.js",
+    "pam": "./dist/cli/index.js"
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "node dist/mcp/server.js",
+    "start:http": "node dist/server/httpServer.js",
     "test": "vitest run",
     "postinstall": "node dist/installer/installMCP.js"
   },

@@ -8,6 +8,15 @@ export interface Goal {
   updatedAt: number;
   iterations: number;
   lastResult?: any;
+
+  // Optional scheduling / prioritization metadata (backward compatible).
+  priorityScore?: number;
+  scheduledAt?: number;
+  lastEvaluated?: number;
+  dueAt?: number;
+  importance?: number;
+  urgency?: number;
+  energyCost?: number;
 }
 
 const GOALS_PATH = "memory/goals.md";
@@ -56,6 +65,13 @@ export class GoalMemory {
   async getActive(): Promise<Goal[]> {
     await this.load();
     return Array.from(this.goals.values()).filter((g) => g.status === "active");
+  }
+
+  async getRunnable(): Promise<Goal[]> {
+    await this.load();
+    return Array.from(this.goals.values()).filter(
+      (g) => g.status === "active" || g.status === "paused"
+    );
   }
 
   async get(goalId: string): Promise<Goal | undefined> {

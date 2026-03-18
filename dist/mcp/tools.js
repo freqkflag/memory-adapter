@@ -9,7 +9,25 @@ import { WriterAgent } from "../agents/writerAgent.js";
 import { recordPredictionOutcome } from "../core/memory/predictionOutcomes.js";
 import { computeHealthSnapshot } from "../core/analytics/selfEvaluation.js";
 import { goalMemory } from "../core/cognition/goalMemory.js";
+import { GoalScheduler } from "../core/cognition/goalScheduler.js";
 export const TOOL_DEFINITIONS = [
+    {
+        name: "list_tools",
+        description: "List all available tools with metadata",
+        capabilities: ["introspection"],
+        domains: ["system"],
+        inputSchema: z.object({}),
+        async handler(_coordinator) {
+            try {
+                const { getToolManifest } = await import("./toolManifest.js");
+                return getToolManifest();
+            }
+            catch (err) {
+                const message = err instanceof Error ? err.message : "Unknown error";
+                return { ok: false, error: message };
+            }
+        }
+    },
     {
         name: "get_user_summary",
         description: "Summarize current user context and agents",
@@ -110,6 +128,111 @@ export const TOOL_DEFINITIONS = [
         async handler(_coordinator, args) {
             const { goalId } = args;
             const updated = await goalMemory.markComplete(goalId);
+            if (!updated) {
+                return { ok: false, error: "Goal not found" };
+            }
+            return updated;
+        }
+    },
+    {
+        name: "prioritize_goals",
+        description: "Rank long-running goals by priority",
+        capabilities: ["planning", "analysis"],
+        domains: ["projects", "identity", "timeline", "emotion"],
+        inputSchema: z.object({}),
+        async handler() {
+            const scheduler = new GoalScheduler();
+            return scheduler.getPrioritizedGoals();
+        }
+    },
+    {
+        name: "get_next_goal",
+        description: "Get the highest-priority runnable goal",
+        capabilities: ["planning"],
+        domains: ["projects", "identity", "timeline", "emotion"],
+        inputSchema: z.object({}),
+        async handler() {
+            const scheduler = new GoalScheduler();
+            return scheduler.getNextGoal();
+        }
+    },
+    {
+        name: "schedule_next_goal",
+        description: "Schedule the next highest-priority goal",
+        capabilities: ["planning", "orchestration"],
+        domains: ["projects", "identity", "timeline", "emotion"],
+        inputSchema: z.object({}),
+        async handler(coordinator) {
+            const scheduler = new GoalScheduler();
+            const scheduled = await scheduler.scheduleNext();
+            await coordinator.logOperation({
+                agentId: "goal-scheduler",
+                action: "schedule_next_goal",
+                payload: scheduled
+                    ? { goalId: scheduled.goal.id, scheduledAt: scheduled.scheduledAt }
+                    : null
+            });
+            return scheduled;
+        }
+    },
+    {
+        name: "run_next_goal",
+        description: "Run the highest-priority goal using adaptive planning",
+        capabilities: ["planning", "orchestration"],
+        domains: ["projects", "identity", "timeline", "emotion"],
+        inputSchema: z.object({}),
+        async handler(coordinator) {
+            const scheduler = new GoalScheduler();
+            const next = await scheduler.getNextGoal();
+            await coordinator.logOperation({
+                agentId: "goal-scheduler",
+                action: "run_next_goal",
+                payload: next ? { goalId: next.id } : null
+            });
+            if (!next) {
+                return { ok: false, error: "No runnable goals" };
+            }
+            const planner = new PlannerAgent(coordinator);
+            const toolMap = {};
+            for (const def of TOOL_DEFINITIONS) {
+                if (def.name === "run_next_goal" || def.name === "adaptive_plan")
+                    continue;
+                toolMap[def.name] = (a) => def.handler(coordinator, a ?? {});
+            }
+            return planner.resumeGoal(next.id, toolMap);
+        }
+    },
+    {
+        name: "update_goal",
+        description: "Update scheduling/prioritization metadata for an existing goal",
+        capabilities: ["planning", "analysis"],
+        domains: ["projects", "identity", "timeline", "emotion"],
+        inputSchema: z.object({
+            goalId: z.string(),
+            status: z.enum(["active", "paused", "completed", "failed"]).optional(),
+            dueAt: z.number().optional(),
+            importance: z.number().min(0).max(5).optional(),
+            urgency: z.number().min(0).max(5).optional(),
+            energyCost: z.number().min(0).max(5).optional()
+        }),
+        async handler(coordinator, args) {
+            const input = args;
+            const existing = await goalMemory.get(input.goalId);
+            await coordinator.logOperation({
+                agentId: "goal-scheduler",
+                action: "update_goal",
+                payload: input
+            });
+            if (!existing) {
+                return { ok: false, error: "Goal not found" };
+            }
+            const updated = await goalMemory.update(input.goalId, {
+                status: input.status,
+                dueAt: input.dueAt,
+                importance: input.importance,
+                urgency: input.urgency,
+                energyCost: input.energyCost
+            });
             if (!updated) {
                 return { ok: false, error: "Goal not found" };
             }
