@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "ai-os": {
+      "command": "npx",
+      "args": ["ai-os"]
+    }
+  }
+}
+

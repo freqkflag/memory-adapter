@@ -3,6 +3,7 @@ import { MemoryService } from "../../memory/MemoryService.js";
 import type { MemoryItem } from "../../memory/MemoryItem.js";
 import { generateReflections } from "../../reflection/reflectionEngine.js";
 import { generatePredictions } from "../../prediction/predictionEngine.js";
+import { getPamDataDir, pamDataFile } from "../../config/runtime.js";
 
 export interface Episode {
   id: string;
@@ -19,8 +20,9 @@ export interface SemanticInsight {
   evidenceEpisodes: string[];
 }
 
-const EPISODES_PATH = "memory/episodes.md";
-const EPISODE_ARCHIVE_PATH = "memory/episode_archive.md";
+const EPISODES_PATH = pamDataFile("episodes.md");
+const EPISODE_ARCHIVE_PATH = pamDataFile("episode_archive.md");
+const PREDICTION_PATTERNS_PATH = pamDataFile("prediction_patterns.md");
 
 export async function loadEpisodes(): Promise<Episode[]> {
   let content = "";
@@ -130,7 +132,7 @@ export async function generateInsightCandidates(
 
 export async function storeSemanticInsights(insights: SemanticInsight[]): Promise<void> {
   if (insights.length === 0) return;
-  await fs.mkdir("memory", { recursive: true });
+  await fs.mkdir(getPamDataDir(), { recursive: true });
 
   const lines: string[] = [];
   for (const insight of insights) {
@@ -140,7 +142,7 @@ export async function storeSemanticInsights(insights: SemanticInsight[]): Promis
     lines.push(line);
   }
 
-  await fs.appendFile("memory/prediction_patterns.md", lines.join("\n") + "\n", "utf8");
+  await fs.appendFile(PREDICTION_PATTERNS_PATH, lines.join("\n") + "\n", "utf8");
 }
 
 export async function archiveOldEpisodes(episodes: Episode[], thresholdMs: number): Promise<void> {
@@ -149,7 +151,7 @@ export async function archiveOldEpisodes(episodes: Episode[], thresholdMs: numbe
   const toArchive = episodes.filter((e) => e.timestamp < cutoff);
   if (toArchive.length === 0) return;
 
-  await fs.mkdir("memory", { recursive: true });
+  await fs.mkdir(getPamDataDir(), { recursive: true });
 
   const lines = toArchive.map(
     (e) => `- ${new Date(e.timestamp).toISOString()} | ${e.domain} | ${e.text}`

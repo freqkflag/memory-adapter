@@ -1,4 +1,5 @@
 import { promises as fs } from "node:fs";
+import { getPamDataDir, pamDataFile } from "../../config/runtime.js";
 
 export interface Goal {
   id: string;
@@ -19,7 +20,7 @@ export interface Goal {
   energyCost?: number;
 }
 
-const GOALS_PATH = "memory/goals.md";
+const GOALS_PATH = pamDataFile("goals.md");
 
 export class GoalMemory {
   private goals = new Map<string, Goal>();
@@ -54,7 +55,7 @@ export class GoalMemory {
   }
 
   private async save(): Promise<void> {
-    await fs.mkdir("memory", { recursive: true });
+    await fs.mkdir(getPamDataDir(), { recursive: true });
     const lines: string[] = [];
     for (const goal of this.goals.values()) {
       lines.push(`- ${JSON.stringify(goal)}`);

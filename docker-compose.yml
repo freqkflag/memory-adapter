@@ -1,0 +1,15 @@
+services:
+  pam:
+    build: .
+    environment:
+      PAM_HOST: 0.0.0.0
+      PAM_PORT: 3000
+      PAM_BASE_URL: https://pam.cultofjoey.com
+      PAM_AUTH_TOKEN: change-me
+      PAM_DATA_DIR: /srv/pam/memory
+    volumes:
+      - /srv/pam/memory:/srv/pam/memory
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+

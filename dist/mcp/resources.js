@@ -1,14 +1,15 @@
 import { promises as fs } from "node:fs";
+import { getPamDataDir, pamDataFile } from "../config/runtime.js";
 const PATHS = {
-    "user://identity": "memory/identity_core.md",
-    "user://timeline": "memory/life_timeline.md",
-    "user://current-state": "memory/current_state.md",
-    "user://creative-lab": "memory/creative_lab.md",
-    "user://projects": "memory/project_tracker.md",
-    "user://reflections": "memory/reflections.md",
-    "user://predictions": "memory/predictions.md",
-    "user://emotional-state": "memory/emotional_vectors.md",
-    "user://agents": "memory/operations.log"
+    "user://identity": pamDataFile("identity_core.md"),
+    "user://timeline": pamDataFile("life_timeline.md"),
+    "user://current-state": pamDataFile("current_state.md"),
+    "user://creative-lab": pamDataFile("creative_lab.md"),
+    "user://projects": pamDataFile("project_tracker.md"),
+    "user://reflections": pamDataFile("reflections.md"),
+    "user://predictions": pamDataFile("predictions.md"),
+    "user://emotional-state": pamDataFile("emotional_vectors.md"),
+    "user://agents": pamDataFile("operations.log")
 };
 export async function getResource(uri) {
     const path = PATHS[uri];
@@ -21,7 +22,7 @@ export async function getResource(uri) {
     catch (err) {
         if (err && err.code === "ENOENT" && uri === "user://agents") {
             // Ensure operations log exists for agents resource
-            await fs.mkdir("memory", { recursive: true });
+            await fs.mkdir(getPamDataDir(), { recursive: true });
             await fs.writeFile(path, "", "utf8");
             return "";
         }

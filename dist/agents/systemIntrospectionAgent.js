@@ -1,6 +1,7 @@
 import { normalizeText } from "../utils/text.js";
 import { computeMemoryStats } from "../core/memory/memoryStats.js";
 import { detectTemporalAnomaly } from "../core/memory/temporalAnomalyDetector.js";
+import { getPamDataDir, pamDataFile } from "../config/runtime.js";
 export class SystemIntrospectionAgent {
     coordinator;
     id = "system-introspection";
@@ -31,7 +32,7 @@ export class SystemIntrospectionAgent {
     async readOperations(opLog) {
         // Re-open the log file to compute metrics; keep OperationLog write-only for normal flow.
         const fs = await import("node:fs/promises");
-        const path = "memory/operations.log";
+        const path = pamDataFile("operations.log");
         let text = "";
         try {
             text = await fs.readFile(path, "utf8");
@@ -39,7 +40,7 @@ export class SystemIntrospectionAgent {
         catch (err) {
             if (err && err.code === "ENOENT") {
                 // If the log does not exist yet, treat as empty and create it for future writes.
-                await fs.mkdir("memory", { recursive: true });
+                await fs.mkdir(getPamDataDir(), { recursive: true });
                 await fs.writeFile(path, "", "utf8");
                 return [];
             }

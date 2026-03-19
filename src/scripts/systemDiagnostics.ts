@@ -3,6 +3,7 @@ import { MemoryGraph } from "../graph/memoryGraph.js";
 import { generatePredictions } from "../prediction/predictionEngine.js";
 import { generateReflections } from "../reflection/reflectionEngine.js";
 import { OperationLog } from "../cognition/operationLog.js";
+import { pamDataFile } from "../config/runtime.js";
 
 async function main() {
   const memory = new MemoryService();
@@ -38,7 +39,7 @@ async function main() {
   const fs = await import("fs/promises");
   let opLines = 0;
   try {
-    const text = await fs.readFile("memory/operations.log", "utf8");
+    const text = await fs.readFile(pamDataFile("operations.log"), "utf8");
     opLines = text
       .split(/\r?\n/)
       .map((l) => l.trim())

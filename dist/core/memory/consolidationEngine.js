@@ -1,8 +1,10 @@
 import { promises as fs } from "node:fs";
 import { generateReflections } from "../../reflection/reflectionEngine.js";
 import { generatePredictions } from "../../prediction/predictionEngine.js";
-const EPISODES_PATH = "memory/episodes.md";
-const EPISODE_ARCHIVE_PATH = "memory/episode_archive.md";
+import { getPamDataDir, pamDataFile } from "../../config/runtime.js";
+const EPISODES_PATH = pamDataFile("episodes.md");
+const EPISODE_ARCHIVE_PATH = pamDataFile("episode_archive.md");
+const PREDICTION_PATTERNS_PATH = pamDataFile("prediction_patterns.md");
 export async function loadEpisodes() {
     let content = "";
     try {
@@ -106,13 +108,13 @@ export async function generateInsightCandidates(clusters, memoryService) {
 export async function storeSemanticInsights(insights) {
     if (insights.length === 0)
         return;
-    await fs.mkdir("memory", { recursive: true });
+    await fs.mkdir(getPamDataDir(), { recursive: true });
     const lines = [];
     for (const insight of insights) {
         const line = `- ${insight.id} | confidence=${insight.confidence.toFixed(3)} | evidence=${insight.evidenceEpisodes.join(",")} | ${insight.text}`;
         lines.push(line);
     }
-    await fs.appendFile("memory/prediction_patterns.md", lines.join("\n") + "\n", "utf8");
+    await fs.appendFile(PREDICTION_PATTERNS_PATH, lines.join("\n") + "\n", "utf8");
 }
 export async function archiveOldEpisodes(episodes, thresholdMs) {
     if (episodes.length === 0)
@@ -121,7 +123,7 @@ export async function archiveOldEpisodes(episodes, thresholdMs) {
     const toArchive = episodes.filter((e) => e.timestamp < cutoff);
     if (toArchive.length === 0)
         return;
-    await fs.mkdir("memory", { recursive: true });
+    await fs.mkdir(getPamDataDir(), { recursive: true });
     const lines = toArchive.map((e) => `- ${new Date(e.timestamp).toISOString()} | ${e.domain} | ${e.text}`);
     await fs.appendFile(EPISODE_ARCHIVE_PATH, lines.join("\n") + "\n", "utf8");
 }

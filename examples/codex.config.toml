@@ -1,0 +1,10 @@
+# Example Codex config for calling the PAM remote HTTP tool bridge.
+#
+# NOTE: Codex HTTP-tool config schemas can vary by version. Treat this as a template.
+
+[pam_http_tools]
+base_url = "https://pam.cultofjoey.com"
+
+# If `PAM_AUTH_TOKEN` is set on the server, include the bearer token here.
+auth_token = "change-me"
+

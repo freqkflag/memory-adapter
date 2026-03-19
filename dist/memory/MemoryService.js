@@ -1,4 +1,5 @@
 import { promises as fs } from "fs";
+import nodePath from "node:path";
 import { DOMAIN_FILE_MAP } from "./domains.js";
 import { parseMemoryMarkdown } from "../markdown/parseMemory.js";
 import { appendMemoryItemsToMarkdown } from "../markdown/writeMemory.js";
@@ -22,8 +23,8 @@ export class MemoryService {
         return this.memoryIndex.get(id);
     }
     async appendToDomain(domain, text, agentId) {
-        const path = DOMAIN_FILE_MAP[domain];
-        const existing = await this.safeRead(path);
+        const filePath = DOMAIN_FILE_MAP[domain];
+        const existing = await this.safeRead(filePath);
         const item = {
             id: generateId("mem"),
             text,
@@ -40,7 +41,8 @@ export class MemoryService {
             timestamp: now()
         };
         const updated = appendMemoryItemsToMarkdown(existing, [item], domain);
-        await fs.writeFile(path, updated, "utf8");
+        await fs.mkdir(nodePath.dirname(filePath), { recursive: true });
+        await fs.writeFile(filePath, updated, "utf8");
         this.memoryIndex.set(item.id, item);
         return item;
     }

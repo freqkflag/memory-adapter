@@ -1,5 +1,6 @@
 import { promises as fs } from "node:fs";
-const GOALS_PATH = "memory/goals.md";
+import { getPamDataDir, pamDataFile } from "../../config/runtime.js";
+const GOALS_PATH = pamDataFile("goals.md");
 export class GoalMemory {
     goals = new Map();
     loaded = false;
@@ -34,7 +35,7 @@ export class GoalMemory {
         this.loaded = true;
     }
     async save() {
-        await fs.mkdir("memory", { recursive: true });
+        await fs.mkdir(getPamDataDir(), { recursive: true });
         const lines = [];
         for (const goal of this.goals.values()) {
             lines.push(`- ${JSON.stringify(goal)}`);
