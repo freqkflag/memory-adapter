@@ -11,7 +11,9 @@
 
 ### Public URL + reverse proxy
 - Public URL: `https://pam.cultofjoey.com`
-- Reverse proxy runs on the Proxmox host (or another edge box) and forwards requests to PAM listening on `127.0.0.1:3000` inside the VM.
+- Preferred ingress path is Cloudflare Tunnel -> Traefik -> PAM.
+- Reverse proxy forwards requests to PAM listening on `127.0.0.1:3000` inside the VM.
+- Standalone Caddy/Nginx examples remain fallback options only.
 
 ### Backups strategy
 - Proxmox VM snapshot backups (good for quick rollbacks).

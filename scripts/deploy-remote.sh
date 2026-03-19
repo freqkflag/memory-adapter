@@ -18,7 +18,7 @@ rsync -az \
   --exclude "coverage/" \
   --exclude ".git/" \
   --exclude ".vite/" \
-  --exclude "memory/" \
+  --exclude "/memory/" \
   --exclude "test-output/" \
   --exclude "tests/**/output*/" \
   --exclude "*.log" \

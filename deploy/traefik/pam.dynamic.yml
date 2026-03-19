@@ -1,0 +1,25 @@
+http:
+  routers:
+    pam:
+      rule: Host(`pam.cultofjoey.com`)
+      entryPoints:
+        - websecure
+      service: pam_service
+      tls: true
+
+  services:
+    pam_service:
+      loadBalancer:
+        servers:
+          # If Traefik can reach the PAM VM directly:
+          # - url: "http://192.168.12.105:3000"
+          #
+          # If internal DNS exists:
+          # - url: "http://pam-vm.internal:3000"
+          #
+          # Replace with your real backend target:
+          - url: "http://192.168.12.105:3000"
+
+# Notes:
+# - Use this in Traefik file-provider dynamic config.
+# - If Traefik runs on another host, backend must be the PAM VM IP/DNS reachable from Traefik.

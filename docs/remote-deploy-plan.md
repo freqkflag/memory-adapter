@@ -10,6 +10,9 @@ Persistent data path on remote: `~/data/pam/memory`
 
 Reverse proxy target: `pam.cultofjoey.com`
 
+Preferred ingress path: Cloudflare Tunnel -> Traefik -> PAM.
+Standalone Caddy/Nginx configs are fallback examples only.
+
 Auth model: bearer token via `PAM_AUTH_TOKEN`
 
 Deployment flow (remote-first):
