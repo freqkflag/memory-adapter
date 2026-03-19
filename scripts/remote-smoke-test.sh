@@ -2,6 +2,23 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=./lib-remote-env.sh
+source "${SCRIPT_DIR}/lib-remote-env.sh"
+load_remote_defaults
+
+if [ "$(uname -s)" = "Darwin" ]; then
+  echo "remote-smoke-test.sh must run on the remote VM."
+  exit 1
+fi
+
+ENV_FILE="${PAM_ENV_FILE:-/etc/pam/pam.env}"
+if [ -f "${ENV_FILE}" ]; then
+  # shellcheck disable=SC1090
+  source "${ENV_FILE}"
+fi
+
 PAM_HOST="${PAM_HOST:-127.0.0.1}"
 PAM_PORT="${PAM_PORT:-3000}"
 PAM_AUTH_TOKEN="${PAM_AUTH_TOKEN:-}"
