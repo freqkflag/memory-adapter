@@ -391,5 +391,68 @@ describe("GoalScheduler + goal tools", () => {
     });
     expect(missing).toEqual({ ok: false, error: "Goal not found" });
   });
+
+  it("MCP tools: get_scheduler_state returns numeric-only state", async () => {
+    const TOOL_DEFINITIONS = await loadTools();
+    const schedulerStateTool = TOOL_DEFINITIONS.find((d) => d.name === "get_scheduler_state");
+
+    const now = Date.now();
+    const fakeCoordinator = {
+      getAllMemories: () => [
+        {
+          id: "e1",
+          text: "valence:0.4,arousal:0.3,tension:0.5,social:0.2",
+          domain: "emotion",
+          durability: "normal",
+          sectionPath: [],
+          tags: [],
+          strength: 0.5,
+          importance: 0.5,
+          accessCount: 0,
+          createdBy: "test",
+          updatedBy: "test",
+          version: 1,
+          timestamp: now - 3000
+        },
+        {
+          id: "e2",
+          text: "valence:0.5,arousal:0.2,tension:0.4,social:0.4",
+          domain: "emotion",
+          durability: "normal",
+          sectionPath: [],
+          tags: [],
+          strength: 0.5,
+          importance: 0.5,
+          accessCount: 0,
+          createdBy: "test",
+          updatedBy: "test",
+          version: 1,
+          timestamp: now - 2000
+        },
+        {
+          id: "e3",
+          text: "valence:0.2,arousal:0.6,tension:0.7,social:0.1",
+          domain: "emotion",
+          durability: "normal",
+          sectionPath: [],
+          tags: [],
+          strength: 0.5,
+          importance: 0.5,
+          accessCount: 0,
+          createdBy: "test",
+          updatedBy: "test",
+          version: 1,
+          timestamp: now - 1000
+        }
+      ]
+    };
+
+    const result = await schedulerStateTool.handler(fakeCoordinator, {});
+    expect(typeof result.strainScore).toBe("number");
+    expect(typeof result.volatilityScore).toBe("number");
+    expect(typeof result.stabilityScore).toBe("number");
+    expect(typeof result.confidence).toBe("number");
+    expect(typeof result.sampleCount).toBe("number");
+  });
 });
 

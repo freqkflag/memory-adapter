@@ -12,6 +12,7 @@ import { recordPredictionOutcome } from "../core/memory/predictionOutcomes.js";
 import { computeHealthSnapshot } from "../core/analytics/selfEvaluation.js";
 import { goalMemory } from "../core/cognition/goalMemory.js";
 import { GoalScheduler } from "../core/cognition/goalScheduler.js";
+import { deriveSchedulerStateFromMemories } from "../core/cognition/schedulerState.js";
 
 export type ToolName =
   | "list_tools"
@@ -34,6 +35,7 @@ export type ToolName =
   | "list_goals"
   | "complete_goal"
   | "prioritize_goals"
+  | "get_scheduler_state"
   | "get_next_goal"
   | "schedule_next_goal"
   | "run_next_goal"
@@ -183,6 +185,28 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
     }
   },
   {
+    name: "get_scheduler_state",
+    description: "Return current scheduler state from recent E-Lang vectors",
+    capabilities: ["introspection", "analysis", "scheduling"],
+    domains: ["emotion", "projects", "system"],
+    inputSchema: z.object({}),
+    async handler(coordinator) {
+      const windowDays = 7;
+      const maxSamples = 64;
+      const state = deriveSchedulerStateFromMemories(coordinator.getAllMemories(), {
+        windowDays,
+        maxSamples,
+        minSamples: 3
+      });
+
+      return {
+        ...state,
+        windowDays,
+        maxSamples
+      };
+    }
+  },
+  {
     name: "get_next_goal",
     description: "Get the highest-priority runnable goal",
     capabilities: ["planning"],
@@ -256,7 +280,10 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
       dueAt: z.number().optional(),
       importance: z.number().min(0).max(5).optional(),
       urgency: z.number().min(0).max(5).optional(),
-      energyCost: z.number().min(0).max(5).optional()
+      energyCost: z.number().min(0).max(5).optional(),
+      focusCost: z.number().min(0).max(5).optional(),
+      emotionalLoad: z.number().min(0).max(5).optional(),
+      cognitiveLoad: z.number().min(0).max(5).optional()
     }),
     async handler(coordinator, args) {
       const input = args as {
@@ -266,6 +293,9 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
         importance?: number;
         urgency?: number;
         energyCost?: number;
+        focusCost?: number;
+        emotionalLoad?: number;
+        cognitiveLoad?: number;
       };
 
       const existing = await goalMemory.get(input.goalId);
@@ -285,7 +315,10 @@ export const TOOL_DEFINITIONS: ToolDefinition[] = [
         dueAt: input.dueAt,
         importance: input.importance,
         urgency: input.urgency,
-        energyCost: input.energyCost
+        energyCost: input.energyCost,
+        focusCost: input.focusCost,
+        emotionalLoad: input.emotionalLoad,
+        cognitiveLoad: input.cognitiveLoad
       });
 
       if (!updated) {

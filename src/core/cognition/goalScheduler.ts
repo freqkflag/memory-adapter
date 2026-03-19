@@ -1,13 +1,32 @@
 import { goalMemory, type Goal } from "./goalMemory.js";
+import {
+  type SchedulerState,
+  getNeutralSchedulerState,
+  loadSchedulerStateFromRecentEmotion
+} from "./schedulerState.js";
 
 export interface RankedGoal extends Goal {
   priorityScore: number;
+  schedulerContext?: {
+    strainScore: number;
+    volatilityScore: number;
+    stabilityScore: number;
+    adjustmentApplied: number;
+  };
 }
 
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * HOUR_MS;
+const EPSILON = 1e-9;
 
-function computePriority(goal: Goal): number {
+function clamp(value: number, min: number, max: number): number {
+  if (!Number.isFinite(value)) return min;
+  if (value < min) return min;
+  if (value > max) return max;
+  return value;
+}
+
+function computeBasePriority(goal: Goal): number {
   const now = Date.now();
 
   const updatedAt = typeof goal.updatedAt === "number" ? goal.updatedAt : 0;
@@ -44,15 +63,61 @@ function computePriority(goal: Goal): number {
   );
 }
 
+function computeGoalLoad(goal: Goal): number {
+  const values = [goal.energyCost, goal.focusCost, goal.emotionalLoad, goal.cognitiveLoad].filter(
+    (v): v is number => typeof v === "number" && Number.isFinite(v)
+  );
+  if (values.length === 0) return 1;
+  const avg = values.reduce((sum, v) => sum + v, 0) / values.length;
+  return clamp(avg, 0, 5);
+}
+
+function computeDeepWorkFactor(goal: Goal): number {
+  const candidates = [goal.focusCost, goal.cognitiveLoad, goal.energyCost].filter(
+    (v): v is number => typeof v === "number" && Number.isFinite(v)
+  );
+  if (candidates.length === 0) return 0;
+  const load = Math.max(...candidates);
+  return clamp((load - 1.5) / 3.5, 0, 1);
+}
+
+export function computeEnergyAwareAdjustment(goal: Goal, state: SchedulerState): number {
+  if (state.confidence <= EPSILON || state.sampleCount <= 0) return 0;
+
+  const load = computeGoalLoad(goal);
+  const normalizedLoad = clamp(load / 5, 0, 1);
+  const deepWorkFactor = computeDeepWorkFactor(goal);
+
+  const strainPressure = clamp(0.65 * state.strainScore + 0.35 * state.volatilityScore, 0, 1);
+  const penalty = strainPressure * normalizedLoad * 2.4;
+  const stabilityBoost = state.stabilityScore * deepWorkFactor * 1.1;
+
+  const raw = (stabilityBoost - penalty) * state.confidence;
+  return clamp(raw, -2.5, 1.25);
+}
+
 export class GoalScheduler {
   async getPrioritizedGoals(): Promise<RankedGoal[]> {
     const runnable = await goalMemory.getRunnable();
-    const now = Date.now();
+    const schedulerState = await loadSchedulerStateFromRecentEmotion().catch(() =>
+      getNeutralSchedulerState()
+    );
 
     return runnable
       .map((g) => {
-        const priorityScore = computePriority(g);
-        return { ...g, priorityScore };
+        const base = computeBasePriority(g);
+        const adjustmentApplied = computeEnergyAwareAdjustment(g, schedulerState);
+        const priorityScore = base + adjustmentApplied;
+        return {
+          ...g,
+          priorityScore,
+          schedulerContext: {
+            strainScore: schedulerState.strainScore,
+            volatilityScore: schedulerState.volatilityScore,
+            stabilityScore: schedulerState.stabilityScore,
+            adjustmentApplied
+          }
+        };
       })
       .sort((a, b) => {
         if (b.priorityScore !== a.priorityScore) {
@@ -82,9 +147,22 @@ export class GoalScheduler {
 
     if (!updated) return null;
 
-    const priorityScore = computePriority(updated);
+    const schedulerState = await loadSchedulerStateFromRecentEmotion().catch(() =>
+      getNeutralSchedulerState()
+    );
+    const adjustmentApplied = computeEnergyAwareAdjustment(updated, schedulerState);
+    const priorityScore = computeBasePriority(updated) + adjustmentApplied;
     return {
-      goal: { ...updated, priorityScore },
+      goal: {
+        ...updated,
+        priorityScore,
+        schedulerContext: {
+          strainScore: schedulerState.strainScore,
+          volatilityScore: schedulerState.volatilityScore,
+          stabilityScore: schedulerState.stabilityScore,
+          adjustmentApplied
+        }
+      },
       scheduledAt
     };
   }

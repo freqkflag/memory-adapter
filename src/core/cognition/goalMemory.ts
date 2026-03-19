@@ -18,6 +18,9 @@ export interface Goal {
   importance?: number;
   urgency?: number;
   energyCost?: number;
+  focusCost?: number;
+  emotionalLoad?: number;
+  cognitiveLoad?: number;
 }
 
 const GOALS_PATH = pamDataFile("goals.md");
