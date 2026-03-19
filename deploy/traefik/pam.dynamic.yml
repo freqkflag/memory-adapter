@@ -1,25 +1,30 @@
 http:
   routers:
-    pam:
+    pam_public_router:
       rule: Host(`pam.cultofjoey.com`)
       entryPoints:
         - websecure
-      service: pam_service
+      service: pam_backend_service
       tls: true
 
   services:
-    pam_service:
+    pam_backend_service:
       loadBalancer:
         servers:
-          # If Traefik can reach the PAM VM directly:
-          # - url: "http://192.168.12.105:3000"
+          # Set this to the target reachable FROM the Traefik host.
           #
-          # If internal DNS exists:
+          # If Traefik and PAM are on the same host namespace:
+          # - url: "http://127.0.0.1:3000"
+          #
+          # If Traefik is on a different host from PAM (common homelab case):
+          # - url: "http://192.168.12.105:3000"
+          # or internal DNS:
           # - url: "http://pam-vm.internal:3000"
           #
-          # Replace with your real backend target:
+          # Keep exactly one active backend URL:
           - url: "http://192.168.12.105:3000"
 
 # Notes:
-# - Use this in Traefik file-provider dynamic config.
-# - If Traefik runs on another host, backend must be the PAM VM IP/DNS reachable from Traefik.
+# - Use this file with Traefik file-provider dynamic config.
+# - Router name and service name are explicit to reduce accidental collisions.
+# - If Traefik runs elsewhere, do not use localhost for PAM backend.

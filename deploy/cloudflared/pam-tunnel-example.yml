@@ -2,13 +2,16 @@ tunnel: <existing-tunnel-id>
 credentials-file: /etc/cloudflared/<existing-tunnel-id>.json
 
 ingress:
-  # Case 1: cloudflared forwards to Traefik catch-all.
-  # Then Traefik host routing handles pam.cultofjoey.com.
-  # Keep existing generic rule and just add Traefik router/service for PAM.
+  # Case A: tunnel already forwards traffic to Traefik catch-all.
+  # Keep that existing rule and only add the Traefik Host router for PAM.
+  # Example existing rule:
+  # - service: http://<traefik-host-or-ip>:80
+  #   originRequest:
+  #     noTLSVerify: true
 
-  # Case 2: explicit per-host ingress entries.
+  # Case B: explicit hostname ingress routing.
   - hostname: pam.cultofjoey.com
     service: http://<traefik-host-or-ip>:80
 
-  # Existing/default fallback:
+  # Keep fallback last.
   - service: http_status:404
