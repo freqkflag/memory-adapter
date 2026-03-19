@@ -7,9 +7,9 @@ STRICT_MODE=0
 VERBOSE_MODE=0
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-active_conflicts=()
-template_only=()
-docs_only=()
+declare -a active_conflicts=()
+declare -a template_only=()
+declare -a docs_only=()
 
 usage() {
   cat <<'EOF'
@@ -74,22 +74,39 @@ extract_path_from_rg_line() {
 }
 
 print_unique_paths() {
-  if [ "$#" -eq 0 ]; then
+  local cleaned
+  cleaned="$(printf '%s\n' "$@" | awk 'NF' | awk '!seen[$0]++' | sort || true)"
+  if [ -z "${cleaned}" ]; then
     echo "- none"
     return
   fi
-  printf '%s\n' "$@" | awk '!seen[$0]++' | sort | sed 's#^#- #'
+  printf '%s\n' "${cleaned}" | sed 's#^#- #'
 }
 
-print_section() {
+load_array_by_name() {
+  local arr_name="$1"
+  # shellcheck disable=SC1083,SC2206
+  eval "LOADED_ITEMS=(\"\${${arr_name}[@]-}\")"
+}
+
+count_unique_array() {
+  local arr_name="$1"
+  load_array_by_name "${arr_name}"
+  printf '%s\n' "${LOADED_ITEMS[@]-}" | awk 'NF' | awk '!seen[$0]++' | wc -l | tr -d ' '
+}
+
+print_section_from_array() {
   local title="$1"
-  shift
-  local items=("$@")
-  if [ "${#items[@]}" -eq 0 ]; then
+  local arr_name="$2"
+  load_array_by_name "${arr_name}"
+  local items=("${LOADED_ITEMS[@]-}")
+  local cleaned
+  cleaned="$(printf '%s\n' "${items[@]-}" | awk 'NF' | awk '!seen[$0]++' || true)"
+  if [ -z "${cleaned}" ]; then
     return
   fi
   echo "[${title}]"
-  print_unique_paths "${items[@]}"
+  print_unique_paths "${items[@]-}"
   echo
 }
 
@@ -221,13 +238,13 @@ for cfg_dir in /etc/traefik /etc/cloudflared /etc/nginx /etc/caddy; do
 done
 echo
 
-print_section "ACTIVE_CONFLICT" "${active_conflicts[@]}"
-print_section "TEMPLATE_ONLY" "${template_only[@]}"
-print_section "DOCS_ONLY" "${docs_only[@]}"
+print_section_from_array "ACTIVE_CONFLICT" "active_conflicts"
+print_section_from_array "TEMPLATE_ONLY" "template_only"
+print_section_from_array "DOCS_ONLY" "docs_only"
 
-active_count="$(printf '%s\n' "${active_conflicts[@]:-}" | awk 'NF' | awk '!seen[$0]++' | wc -l | tr -d ' ')"
-template_count="$(printf '%s\n' "${template_only[@]:-}" | awk 'NF' | awk '!seen[$0]++' | wc -l | tr -d ' ')"
-docs_count="$(printf '%s\n' "${docs_only[@]:-}" | awk 'NF' | awk '!seen[$0]++' | wc -l | tr -d ' ')"
+active_count="$(count_unique_array "active_conflicts")"
+template_count="$(count_unique_array "template_only")"
+docs_count="$(count_unique_array "docs_only")"
 
 echo "Summary:"
 echo "- Active conflicts: ${active_count}"
@@ -235,13 +252,13 @@ echo "- Template/example matches: ${template_count}"
 echo "- Docs-only matches: ${docs_count}"
 echo
 
-if [ "${#active_conflicts[@]}" -gt 0 ]; then
+if [ "${active_count}" -gt 0 ]; then
   echo "Final status:"
   echo "CONFLICT: active runtime conflict detected"
   exit 1
 fi
 
-if [ "${#template_only[@]}" -gt 0 ] || [ "${#docs_only[@]}" -gt 0 ]; then
+if [ "${template_count}" -gt 0 ] || [ "${docs_count}" -gt 0 ]; then
   echo "Final status:"
   echo "WARNING: template/docs matches only"
   exit 0
